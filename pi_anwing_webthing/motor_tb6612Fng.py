@@ -1,4 +1,4 @@
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from pi_anwing_webthing.anwing import Motor
 from dataclasses import dataclass
 from typing import List
@@ -34,13 +34,13 @@ class TB6612FNGMotor(Motor):
     def __init__(self, name: str, pin_forward: int, pin_backward: int, sec_per_step: float):
         self.__name = name
         self.__sec_per_step = sec_per_step
-        #GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM)
         self.pin_forward = pin_forward
         self.pin_forward_is_on = False
-        #GPIO.setup(pin_forward, GPIO.OUT, initial=0)
+        GPIO.setup(pin_forward, GPIO.OUT, initial=0)
         self.pin_backward = pin_backward
         self.pin_backward_is_on = False
-        #GPIO.setup(pin_backward, GPIO.OUT, initial=0)
+        GPIO.setup(pin_backward, GPIO.OUT, initial=0)
 
     @property
     def name(self) -> str:
@@ -55,7 +55,7 @@ class TB6612FNGMotor(Motor):
         if self.pin_backward_is_on or self.pin_forward_is_on:
             logging.info("stop motor")
         if self.pin_backward_is_on:
-            #GPIO.output(self.pin_backward, 0)
+            GPIO.output(self.pin_backward, 0)
             self.pin_backward_is_on = False
         if self.pin_forward_is_on:
             GPIO.output(self.pin_forward, 0)
