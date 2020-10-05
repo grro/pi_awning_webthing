@@ -170,6 +170,7 @@ class Anwing:
 
     def __process_move(self):
         time.sleep(1)
+        self.calibrate()
         while True:
             try:
                 self.movement = self.movement.process()
