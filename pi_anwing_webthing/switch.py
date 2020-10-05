@@ -1,4 +1,4 @@
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from typing import List
 from pi_anwing_webthing.anwing import Anwing
 
@@ -14,13 +14,13 @@ class Switch:
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
         self.state = self.STOP
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
-        #GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
-        #GPIO.add_event_callback(self.pin_forward, self.on_switch_updated)
-        #GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
-        #GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
-        #GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
+        GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
+        GPIO.add_event_callback(self.pin_forward, self.on_switch_updated)
+        GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
+        GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
+        GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
         print("bound to PIN_FORWARD=" + str(self.pin_forward) + " and PIN_BACKWARD=" + str(self.pin_backward))
 
     def is_forward(self) -> bool:
@@ -31,8 +31,8 @@ class Switch:
 
     def on_switch_updated(self, pin: int):
         print("event occurred on pin " + str(pin))
-        is_forward = True #GPIO.input(self.pin_forward) >= 1
-        is_backward = False #GPIO.input(self.pin_backward) >= 1
+        is_forward = GPIO.input(self.pin_forward) >= 1
+        is_backward = GPIO.input(self.pin_backward) >= 1
         new_state = (is_forward, is_backward)
         print("current state " + str(self.state))
         print("new state     " + str(new_state))
