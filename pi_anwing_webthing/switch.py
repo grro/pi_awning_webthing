@@ -30,7 +30,6 @@ class Switch:
         return self.state[1]
 
     def on_switch_updated(self, pin: int):
-        print("event occurred on pin " + str(pin))
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
         new_state = (is_forward, is_backward)

@@ -9,7 +9,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=$entrypoint --command listen --port $port --gpio $gpio_number
+ExecStart=$entrypoint --command listen --port $port --filename $filename
 SyslogIdentifier=$packagename
 StandardOutput=syslog
 StandardError=syslog
@@ -21,8 +21,8 @@ WantedBy=multi-user.target
 ''')
 
 
-def register(packagename, entrypoint, port):
-    unit = UNIT_TEMPLATE.substitute(packagename=packagename, entrypoint=entrypoint, port=port, gpio_number=gpio_number)
+def register(packagename: str, entrypoint: str, port: int, filename: str):
+    unit = UNIT_TEMPLATE.substitute(packagename=packagename, entrypoint=entrypoint, port=port, filename=filename)
     service = packagename + "_" + str(port) + ".service"
     unit_file_fullname = str(pathlib.Path("/", "etc", "systemd", "system", service))
     with open(unit_file_fullname, "w") as file:
@@ -33,7 +33,7 @@ def register(packagename, entrypoint, port):
     system("sudo systemctl status " + service)
 
 
-def deregister(packagename, port):
+def deregister(packagename: str, port: int):
     print("deregister " + packagename + " on port " + str(port))
 
     service = packagename + "_" + str(port) + ".service"
@@ -46,6 +46,6 @@ def deregister(packagename, port):
     except Exception as e:
         pass
 
-def printlog(packagename, port):
+def printlog(packagename: str, port: int):
     service = packagename + "_" + str(port) + ".service"
     system("sudo journalctl -f -u " + service)
