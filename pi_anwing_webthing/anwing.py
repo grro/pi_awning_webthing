@@ -150,9 +150,19 @@ class Anwing:
         self.motor = motor
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
+        Thread(name=self.name + "_autocalibratee", target=self.__process_auto_calibrate, daemon=True).start()
 
     def register_listener(self, listener: AwningPropertyListener):
         self.listener = listener
+
+    def __process_auto_calibrate(self):
+        while True:
+            try:
+                if self.get_current_position() == 0:
+                    self.calibrate()
+            except Exception as e:
+                print("error occurred on auto calibrate " + str(e))
+            time.sleep(13 * 60 * 60)
 
     def calibrate(self):
         print("calibrating")
