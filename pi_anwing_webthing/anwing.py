@@ -149,7 +149,8 @@ class Anwing:
         self.motor = motor
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
-        schedule.every().day.at("4:40").do(self.calibrate)
+        schedule.every().day.at("04:40").do(self.calibrate)
+        schedule.run_pending()
 
     def register_listener(self, listener: AwningPropertyListener):
         self.listener = listener
