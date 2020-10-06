@@ -34,7 +34,7 @@ class AnwingWebThing(Thing):
             ['MultiLevelSensor'],
             description
         )
-
+        self.logger = logging.getLogger(awning.name)
         self.awning = awning
         self.awning.register_listener(WebThingAwningPropertyListener(self))
 
@@ -100,15 +100,15 @@ class AnwingWebThing(Thing):
 
     def set_current_position(self, value):
         self.current_position.notify_of_external_update(value)
-        logging.info("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
+        self.logger.info("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
-        logging.info("anwing is retracting " + str(value))
+        self.logger.info("anwing is retracting " + str(value))
 
     def set_extending(self, value):
         self.extending.notify_of_external_update(value)
-        logging.info("anwing is extending " + str(value))
+        self.logger.info("anwing is extending " + str(value))
 
 
 
@@ -118,7 +118,7 @@ def run_server(port: int, filename: str, description: str):
     anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
 
     server = WebThingServer(MultipleThings(anwing_webthings, 'anwings'), port=port)
-    switch = Switch(pin_forward=17, pin_backward=27, anwings = anwings)
+    Switch(pin_forward=17, pin_backward=27, anwings = anwings)
 
     try:
         logging.info('starting the server')

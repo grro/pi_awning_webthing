@@ -34,8 +34,9 @@ setup(
         'webthings', 'anwing', 'control', 'pation', 'terrace'
     ],
     install_requires=[
-        'webthing'
-        #'RPi.GPIO'
+        'webthing',
+        'schedule',
+        'RPi.GPIO'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

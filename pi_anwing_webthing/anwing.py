@@ -1,6 +1,7 @@
 import logging
 import sys
 import time
+import schedule
 from datetime import datetime
 from abc import ABC, abstractmethod
 from threading import Thread
@@ -82,7 +83,6 @@ class Movement:
 
     def process(self):
         if self.is_target_reached():
-            print("target position " + str(self.get_target_pos()) + " reached")
             return Idling(self.motor, self.get_target_pos(), self.sec_per_slot, self.awning)
         else:
             self.awning.listener.on_current_pos_updated(self.get_current_pos())
@@ -139,33 +139,23 @@ class Backward(Movement):
         self.awning.listener.on_retracting_updated(True)
 
 
-
 class Anwing:
 
     def __init__(self, motor: Motor):
         self.name = motor.name
         self.sec_per_slot = motor.sec_per_step
-        self.logger = logging.getLogger('awning.' + self.name)
+        self.logger = logging.getLogger(self.name)
         self.listener = AwningPropertyListener()
         self.motor = motor
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
-        Thread(name=self.name + "_autocalibratee", target=self.__process_auto_calibrate, daemon=True).start()
+        schedule.every().day.at("4:40").do(self.calibrate)
 
     def register_listener(self, listener: AwningPropertyListener):
         self.listener = listener
 
-    def __process_auto_calibrate(self):
-        while True:
-            try:
-                if self.get_current_position() == 0:
-                    self.calibrate()
-            except Exception as e:
-                print("error occurred on auto calibrate " + str(e))
-            time.sleep(13 * 60 * 60)
-
     def calibrate(self):
-        print("calibrating")
+        self.logger.info("calibrating")
         self.movement = Idling(self.motor, 100, self.sec_per_slot, self) # set position to 100%
         self.set_target_position(0)   # and backward to position 0. This ensures that the awning is calibrated with position 0
 

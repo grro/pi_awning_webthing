@@ -1,3 +1,4 @@
+import logging
 import RPi.GPIO as GPIO
 from typing import List
 from pi_anwing_webthing.anwing import Anwing
@@ -21,7 +22,7 @@ class Switch:
         GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
         GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
-        print("bound to PIN_FORWARD=" + str(self.pin_forward) + " and PIN_BACKWARD=" + str(self.pin_backward))
+        logging.info("bound to PIN_FORWARD=" + str(self.pin_forward) + " and PIN_BACKWARD=" + str(self.pin_backward))
 
     def is_forward(self) -> bool:
         return self.state[0]
@@ -33,8 +34,7 @@ class Switch:
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
         new_state = (is_forward, is_backward)
-        print("current state " + str(self.state))
-        print("new state     " + str(new_state))
+        logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
         try:
             if self.state != new_state:
                 if new_state == self.MOVE_FORWARD:
