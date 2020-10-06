@@ -13,7 +13,7 @@ lane3, 5, 6, 0.5
 lane4, 10, 9, 0.5
 ```
 
-Regarding the hardware setup and wiring please refer [example hardware setup](dgo-3512ada.md)
+Regarding the hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.md)
 
 To install this software you may use [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
 ```
