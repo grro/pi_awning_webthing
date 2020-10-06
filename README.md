@@ -3,8 +3,7 @@ A web connected patio awnings controller on Raspberry Pi
 
 Currently supported are [TB6612FNG driven](https://www.pololu.com/product/713) motors such 
 as [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396). 
-The concrete motor configuration(s) are defined by using a config file. For TB6612FNG driven motors the filename has to include 
-the term *tb6612fng* such as tb6612fng_motors.config  
+The concrete motor configuration(s) are defined by using a config file such s shown below. 
 ```
 # name, gpio_forward, gpio_backward, step_duration_in_sec
 lane1, 2, 3, 0.5
@@ -12,8 +11,8 @@ lane2, 19, 26, 0.5
 lane3, 5, 6, 0.5
 lane4, 10, 9, 0.5
 ```
-
-Regarding the hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.md)
+For TB6612FNG driven motors the filename has to include the term *tb6612fng* such as tb6612fng_motors.config. Regarding the 
+hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.md)
 
 To install this software you may use [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
 ```
