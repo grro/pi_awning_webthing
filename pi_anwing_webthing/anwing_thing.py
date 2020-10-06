@@ -30,7 +30,7 @@ class AnwingWebThing(Thing):
         Thing.__init__(
             self,
             'urn:dev:ops:anwing-TB6612FNG',
-            'AnwingControl#' + awning.name,
+            'Anwing ' + awning.name,
             ['MultiLevelSensor'],
             description
         )
@@ -73,7 +73,7 @@ class AnwingWebThing(Thing):
                  'retracting',
                  self.retracting,
                  metadata={
-                     '@type': 'OnOffProperty',
+                     '@type': 'BooleanProperty',
                      'title': awning.name + ' is retracting',
                      "type": "boolean",
                      'readOnly': True,
@@ -86,7 +86,7 @@ class AnwingWebThing(Thing):
                  'extending',
                  self.extending,
                  metadata={
-                     '@type': 'OnOffProperty',
+                     '@type': 'BooleanProperty',
                      'title': awning.name + ' is extending',
                      "type": "boolean",
                      'readOnly': True,
