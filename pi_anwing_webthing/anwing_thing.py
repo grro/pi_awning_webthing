@@ -30,7 +30,7 @@ class AnwingWebThing(Thing):
         Thing.__init__(
             self,
             'urn:dev:ops:anwing-TB6612FNG',
-            'AnwingControl',
+            'AnwingControl#' + awning.name,
             ['MultiLevelSensor'],
             description
         )

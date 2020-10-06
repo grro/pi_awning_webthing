@@ -129,6 +129,7 @@ class Forward(Movement):
         Movement.__init__(self, motor, start_pos, new_position - start_pos, sec_per_slot, True, awning)
         self.motor.forward()
         self.awning.listener.on_extenting_updated(True)
+        self.awning.listener.on_retracting_updated(False)
 
 
 class Backward(Movement):
@@ -137,6 +138,7 @@ class Backward(Movement):
         Movement.__init__(self, motor, start_pos, start_pos - new_position, sec_per_slot, False, awning)
         self.motor.backward()
         self.awning.listener.on_retracting_updated(True)
+        self.awning.listener.on_extenting_updated(False)
 
 
 class Anwing:
