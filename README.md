@@ -16,7 +16,7 @@ hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.
 
 To install this software you may use [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
 ```
-sudo pip install pi_anwing_webthing
+sudo pip install pi-anwing-webthing
 ```
 
 After this installation you may start the webthing http endpoint inside your python code or via command line using
