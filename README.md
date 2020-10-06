@@ -39,6 +39,106 @@ The anwing service exposes an http webthing endpoint supporting the anwing prope
 curl http://192.168.0.23:9500/properties 
 
 {
-   ...
+ [
+    {
+       "id":"urn:dev:ops:anwing-TB6612FNG",
+       "title":"AnwingControl",
+       "@context":"https://iot.mozilla.org/schemas",
+       "properties":{
+          "target_position":{
+             "@type":"LevelProperty",
+             "title":"awning lane1 target position",
+             "type":"integer",
+             "minimum":0,
+             "maximum":100,
+             "description":"awning lane1 target position",
+             "links":[
+                {
+                   "rel":"property",
+                   "href":"/0/properties/target_position"
+                }
+             ]
+          },
+          "current_position":{
+             "@type":"LevelProperty",
+             "title":"awning lane1 current position",
+             "type":"integer",
+             "minimum":0,
+             "maximum":100,
+             "readOnly":true,
+             "description":"awning lane1 current position",
+             "links":[
+                {
+                   "rel":"property",
+                   "href":"/0/properties/current_position"
+                }
+             ]
+          },
+          "retracting":{
+             "@type":"OnOffProperty",
+             "title":"lane1 is retracting",
+             "type":"boolean",
+             "readOnly":true,
+             "description":"lane1 is retracting",
+             "links":[
+                {
+                   "rel":"property",
+                   "href":"/0/properties/retracting"
+                }
+             ]
+          },
+          "extending":{
+             "@type":"OnOffProperty",
+             "title":"lane1 is extending",
+             "type":"boolean",
+             "readOnly":true,
+             "description":"lane1 is extending",
+             "links":[
+                {
+                   "rel":"property",
+                   "href":"/0/properties/extending"
+                }
+             ]
+          }
+       },
+       "actions":{
+          
+       },
+       "events":{
+          
+       },
+       "links":[
+          {
+             "rel":"properties",
+             "href":"/0/properties"
+          },
+          {
+             "rel":"actions",
+             "href":"/0/actions"
+          },
+          {
+             "rel":"events",
+             "href":"/0/events"
+          },
+          {
+             "rel":"alternate",
+             "href":"ws://192.168.0.23:9500/0"
+          }
+       ],
+       "description":"A web connected patio awnings controller on Raspberry Pi",
+       "@type":[
+          "MultiLevelSensor"
+       ],
+       "href":"/0",
+       "base":"http://192.168.0.23:9500/0",
+       "securityDefinitions":{
+          "nosec_sc":{
+             "scheme":"nosec"
+          }
+       },
+       "security":"nosec_sc"
+    },
+    ...
+ ]
 }
 ```
