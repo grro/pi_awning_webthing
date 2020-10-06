@@ -7,7 +7,7 @@ The anwing will be extended and retracted by using a bidirectional DC motor [DGO
 To control the motor the [TB6612FNG](https://www.pololu.com/product/713) dual motor driver is used. 
 
 Extracting and expanding is time-controlled. This means the motor will be supplied with forward or backward power for a period of time. 
-To save the motor a limit switch is used which interrupts the power circuit.
+To save the motor a limit switch is used which will interrupt the power circuit, if the end position is reached.
  
 ![anwing picture](switch_small.jpg)
 
