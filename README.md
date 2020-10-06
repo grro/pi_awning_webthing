@@ -1,9 +1,7 @@
 # pi_anwing_webthing
 A web connected patio awnings controller on Raspberry Pi
 
-Pololu TB6612FNG Dual Motortreiber Carrier
+Currently supported are [TB6612FNG driven](https://www.pololu.com/product/713) motors such 
+as [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396)
 
-https://www.pololu.com/product/713
 
-
-https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396
