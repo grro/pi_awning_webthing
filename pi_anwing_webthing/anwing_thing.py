@@ -74,7 +74,7 @@ class AnwingWebThing(Thing):
                  self.retracting,
                  metadata={
                      '@type': 'BooleanProperty',
-                     'title': awning.name + ' is retracting',
+                     'title': awning.name + ' retracting',
                      "type": "boolean",
                      'readOnly': True,
                      'description': awning.name + " is retracting"
@@ -87,7 +87,7 @@ class AnwingWebThing(Thing):
                  self.extending,
                  metadata={
                      '@type': 'BooleanProperty',
-                     'title': awning.name + ' is extending',
+                     'title': awning.name + ' extending',
                      "type": "boolean",
                      'readOnly': True,
                      'description': awning.name + " is extending"
