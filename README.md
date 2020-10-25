@@ -21,14 +21,14 @@ sudo pip install pi-anwing-webthing
 
 After this installation you may start the webthing http endpoint inside your python code or via command line using
 ```
-sudo anwing --command listen --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
+sudo anwing --command listen --hostname 192.168.0.23 --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
 ```
-Here, the webthing API will be bind to the local port 9500 
+Here, the webthing API will be bind to hostname 192.168.0.23 on the local port 9500 
 
 Alternatively to the *listen* command, you can use the *register* command to register and start the webthing service as systemd unit. 
 By doing this the webthing service will be started automatically on boot. Starting the server manually using the *listen* command is no longer necessary. 
 ```
-sudo anwing --command register --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
+sudo anwing --command register --hostname 192.168.0.23 --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
 ```
 
 The anwing service exposes an http webthing endpoint supporting the anwing properties. E.g. 

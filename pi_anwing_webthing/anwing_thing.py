@@ -112,12 +112,12 @@ class AnwingWebThing(Thing):
 
 
 
-def run_server(port: int, filename: str, description: str):
+def run_server(hostname: str, port: int, filename: str, description: str):
 
     anwings = [Anwing(motor) for motor in load_tb6612fng(filename)]
     anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
 
-    server = WebThingServer(MultipleThings(anwing_webthings, 'anwings'), port=port)
+    server = WebThingServer(MultipleThings(anwing_webthings, 'anwings'), hostname=hostname, port=port)
     Switch(pin_forward=17, pin_backward=27, anwings = anwings)
 
     try:
