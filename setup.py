@@ -1,9 +1,9 @@
 from setuptools import setup
 from os import path
 
-PACKAGENAME = 'pi_anwing_webthing'
-ENTRY_POINT = "anwing"
-DESCRIPTION = "A web connected patio awnings controller on Raspberry Pi"
+PACKAGENAME = 'pi_awning_webthing'
+ENTRY_POINT = "awning"
+DESCRIPTION = "A web connected terrace awning controller on Raspberry Pi"
 
 
 this_directory = path.abspath(path.dirname(__file__))

@@ -1,7 +1,7 @@
 import logging
 import RPi.GPIO as GPIO
 from typing import List
-from pi_anwing_webthing.anwing import Anwing
+from pi_awning_webthing.awning import Anwing
 
 
 class Switch:

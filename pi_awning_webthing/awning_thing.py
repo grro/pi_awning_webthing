@@ -1,7 +1,7 @@
 from webthing import (MultipleThings, Property, Thing, Value, WebThingServer)
-from pi_anwing_webthing.anwing import Anwing, AwningPropertyListener
-from pi_anwing_webthing.switch import Switch
-from pi_anwing_webthing.motor_tb6612Fng import load_tb6612fng
+from pi_awning_webthing.awning import Anwing, AwningPropertyListener
+from pi_awning_webthing.switch import Switch
+from pi_awning_webthing.motor_tb6612Fng import load_tb6612fng
 import logging
 import tornado.ioloop
 
@@ -117,7 +117,7 @@ def run_server(hostname: str, port: int, filename: str, description: str):
     anwings = [Anwing(motor) for motor in load_tb6612fng(filename)]
     anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
 
-    server = WebThingServer(MultipleThings(anwing_webthings, 'anwings'), hostname=hostname, port=port)
+    server = WebThingServer(MultipleThings(anwing_webthings, 'Anwings'), hostname=hostname, port=port)
     Switch(pin_forward=17, pin_backward=27, anwings = anwings)
 
     try:

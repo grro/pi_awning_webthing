@@ -1,12 +1,12 @@
 import os
 import logging
 import argparse
-from pi_anwing_webthing.anwing_thing import run_server
-from pi_anwing_webthing.unit import register, deregister, printlog
+from pi_awning_webthing.awning_thing import run_server
+from pi_awning_webthing.unit import register, deregister, printlog
 
-PACKAGENAME = 'pi_anwing_webthing'
-ENTRY_POINT = "anwing"
-DESCRIPTION = "A web connected patio awnings controller on Raspberry Pi"
+PACKAGENAME = 'pi_awning_webthing'
+ENTRY_POINT = "awning"
+DESCRIPTION = "A web connected terrace awning controller on Raspberry Pi"
 
 
 
