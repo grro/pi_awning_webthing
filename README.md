@@ -1,5 +1,5 @@
-# pi_anwing_webthing
-A web connected patio awnings controller on Raspberry Pi
+# pi_awning_webthing
+A web connected terrace awning controller on Raspberry Pi
 
 Currently supported are [TB6612FNG driven](https://www.pololu.com/product/713) motors such 
 as [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396). 
@@ -16,22 +16,22 @@ hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.
 
 To install this software you may use [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
 ```
-sudo pip install pi-anwing-webthing
+sudo pip install pi-awning-webthing
 ```
 
 After this installation you may start the webthing http endpoint inside your python code or via command line using
 ```
-sudo anwing --command listen --hostname 192.168.0.23 --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
+sudo awning --command listen --hostname 192.168.0.23 --port 9500 --filename /etc/awning/tb6612fng_motors.config 
 ```
 Here, the webthing API will be bind to hostname 192.168.0.23 on the local port 9500 
 
 Alternatively to the *listen* command, you can use the *register* command to register and start the webthing service as systemd unit. 
 By doing this the webthing service will be started automatically on boot. Starting the server manually using the *listen* command is no longer necessary. 
 ```
-sudo anwing --command register --hostname 192.168.0.23 --port 9500 --filename /etc/anwing/tb6612fng_motors.config 
+sudo awning --command register --hostname 192.168.0.23 --port 9500 --filename /etc/awning/tb6612fng_motors.config 
 ```
 
-The anwing service exposes an http webthing endpoint supporting the anwing properties. E.g. 
+The awning service exposes an http webthing endpoint supporting the awning properties. E.g. 
 ```
 # webthing has been started on host 192.168.0.23
 
@@ -40,8 +40,8 @@ curl http://192.168.0.23:9500/properties
 {
  [
     {
-       "id":"urn:dev:ops:anwing-TB6612FNG",
-       "title":"AnwingControl",
+       "id":"urn:dev:ops:awning-TB6612FNG",
+       "title":"AwningControl",
        "@context":"https://iot.mozilla.org/schemas",
        "properties":{
           "target_position":{
