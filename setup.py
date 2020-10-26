@@ -24,14 +24,14 @@ setup(
     license='MIT',
     author='Gregor Roth',
     author_email='gregor.roth@web.de',
-    url='https://github.com/grro/pi_anwing_webthing',
+    url='https://github.com/grro/pi_awning_webthing',
     entry_points={
         'console_scripts': [
             ENTRY_POINT + '=' + PACKAGENAME + ':main'
         ]
     },
     keywords=[
-        'webthings', 'anwing', 'control', 'pation', 'terrace'
+        'webthings', 'awning', 'control', 'pation', 'terrace'
     ],
     install_requires=[
         'webthing',
