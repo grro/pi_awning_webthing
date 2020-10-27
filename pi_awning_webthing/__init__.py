@@ -1,45 +1,58 @@
-import os
 import logging
-import argparse
+from string import Template
+from pi_awning_webthing.app import App
 from pi_awning_webthing.awning_thing import run_server
-from pi_awning_webthing.unit import register, deregister, printlog
 
 PACKAGENAME = 'pi_awning_webthing'
 ENTRY_POINT = "awning"
 DESCRIPTION = "A web connected terrace awning controller on Raspberry Pi"
 
 
+UNIT_TEMPLATE = Template('''
+[Unit]
+Description=$packagename
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=$entrypoint --command listen --verbose $verbose --hostname hostname --port $port --filename $filename
+SyslogIdentifier=$packagename
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+''')
+
+
+class AwningApp(App):
+
+    def do_add_argument(self, parser):
+        parser.add_argument('--filename', metavar='filename', required=False, type=str,  help='the config filename')
+
+
+    def do_additional_listen_example_params(self):
+        return "--filename /etc/awning/tb6612fng_motors.config"
+
+    def do_process_command(self, command:str, hostname: str, port: int, verbose: bool, args) -> bool:
+        if command == 'listen' and (args.filename is not None):
+            logging.info("running " + self.packagename + " on " + hostname + "/" + str(port) + " with config " + args.filename)
+            run_server(hostname, port, args.filename, self.description)
+            return True
+        elif args.command == 'register' and (args.filename is not None):
+            logging.info("register " + self.packagename + " on " + hostname + "/" + str(port) + " with config " + args.filename)
+            unit = UNIT_TEMPLATE.substitute(packagename=self.packagename, entrypoint=self.entrypoint, hostname=hostname, port=port, verbose=verbose, filename=args.filename)
+            self.unit.register(hostname, port, unit)
+            return True
+        else:
+            return False
+
 
 def main():
-    parser = argparse.ArgumentParser(description=DESCRIPTION)
-    parser.add_argument('--command', metavar='command', required=True, type=str, help='the command. Supported commands are: listen (run the webthing service), register (register and starts the webthing service as a systemd unit, deregister (deregisters the systemd unit), log (prints the log)')
-    parser.add_argument('--hostname', metavar='hostname', required=True, type=str, help='the hostname of the webthing serivce')
-    parser.add_argument('--port', metavar='port', required=True, type=int, help='the port of the webthing serivce')
-    parser.add_argument('--filename', metavar='filename', required=False, type=str,  help='the config filename')
-    args = parser.parse_args()
-
-    if args.command == 'listen':
-        if args.filename is None:
-            logging.info("--filename has to be set")
-        else:
-            logging.info("running " + PACKAGENAME + " on " + args.hostname + "/" + str(args.port) + " with config " + args.filename)
-        run_server(args.hostname, int(args.port), args.filename, DESCRIPTION)
-    elif args.command == 'register':
-        if args.filename is None:
-            logging.info("--filename has to be set")
-        else:
-            logging.info("register " + PACKAGENAME + " on " + args.hostname + "/" + str(args.port) + " with config " + args.filename)
-            register(PACKAGENAME, ENTRY_POINT, args.hostname,int(args.port), args.filename)
-    elif args.command == 'deregister':
-        deregister(PACKAGENAME, int(args.port))
-    elif args.command == 'log':
-        printlog(PACKAGENAME, int(args.port))
-    else:
-        logging.info("usage " + ENTRY_POINT + " --help")
+    AwningApp(PACKAGENAME, ENTRY_POINT, DESCRIPTION).handle_command()
 
 
 if __name__ == '__main__':
-    log_level = os.environ.get("LOGLEVEL", "INFO")
-    logging.basicConfig(format='%(asctime)s %(name)-20s: %(levelname)-8s %(message)s', level=log_level, datefmt='%Y-%m-%d %H:%M:%S')
     main()
-
