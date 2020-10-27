@@ -30,7 +30,7 @@ class AnwingWebThing(Thing):
         Thing.__init__(
             self,
             'urn:dev:ops:anwing-TB6612FNG',
-            'Anwing ' + awning.name,
+            'Awning ' + awning.name,
             ['MultiLevelSensor'],
             description
         )
@@ -117,7 +117,7 @@ def run_server(hostname: str, port: int, filename: str, description: str):
     anwings = [Anwing(motor) for motor in load_tb6612fng(filename)]
     anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
 
-    server = WebThingServer(MultipleThings(anwing_webthings, 'Anwings'), hostname=hostname, port=port)
+    server = WebThingServer(MultipleThings(anwing_webthings, 'Awnings'), hostname=hostname, port=port)
     Switch(pin_forward=17, pin_backward=27, anwings = anwings)
 
     try:
