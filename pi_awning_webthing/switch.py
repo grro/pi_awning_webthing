@@ -34,7 +34,8 @@ class Switch:
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
         new_state = (is_forward, is_backward)
-        logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
+        if new_state != self.state:
+            logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
         try:
             if self.state != new_state:
                 if new_state == self.MOVE_FORWARD:
