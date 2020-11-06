@@ -1,5 +1,5 @@
 from webthing import (MultipleThings, Property, Thing, Value, WebThingServer)
-from pi_awning_webthing.awning import Anwing, AwningPropertyListener
+from pi_awning_webthing.awning import Awning, AwningPropertyListener
 from pi_awning_webthing.switch import Switch
 from pi_awning_webthing.motor_tb6612Fng import load_tb6612fng
 import logging
@@ -26,7 +26,7 @@ class AnwingWebThing(Thing):
     # regarding capabilities refer https://iot.mozilla.org/schemas
     # there is also another schema registry http://iotschema.org/docs/full.html not used by webthing
 
-    def __init__(self, description: str, awning: Anwing):
+    def __init__(self, description: str, awning: Awning):
         Thing.__init__(
             self,
             'urn:dev:ops:anwing-TB6612FNG',
@@ -45,11 +45,11 @@ class AnwingWebThing(Thing):
                      self.target_position,
                      metadata={
                          '@type': 'LevelProperty',
-                         'title': 'awning ' + awning.name + ' target position',
+                         'title': 'Awning target position',
                          "type": "integer",
                          "minimum": 0,
                          "maximum": 100,
-                         'description': 'awning ' + awning.name + ' target position'
+                         'description': 'awning target position'
                      }))
 
         self.current_position = Value(0)
@@ -59,12 +59,12 @@ class AnwingWebThing(Thing):
                      self.current_position,
                      metadata={
                          '@type': 'LevelProperty',
-                         'title': 'awning ' + awning.name + ' current position',
+                         'title': 'Awning current position',
                          "type": "integer",
                          'minimum': 0,
                          'maximum': 100,
                          'readOnly': True,
-                         'description': 'awning ' + awning.name + ' current position'
+                         'description': 'awning current position'
                      }))
 
         self.retracting = Value(0)
@@ -74,10 +74,10 @@ class AnwingWebThing(Thing):
                  self.retracting,
                  metadata={
                      '@type': 'BooleanProperty',
-                     'title': awning.name + ' retracting',
+                     'title': 'Awning is retracting',
                      "type": "boolean",
                      'readOnly': True,
-                     'description': awning.name + " is retracting"
+                     'description': 'Awning is retracting'
                  }))
 
         self.extending = Value(0)
@@ -87,10 +87,10 @@ class AnwingWebThing(Thing):
                  self.extending,
                  metadata={
                      '@type': 'BooleanProperty',
-                     'title': awning.name + ' extending',
+                     'title': 'Awning is extending',
                      "type": "boolean",
                      'readOnly': True,
-                     'description': awning.name + " is extending"
+                     'description': 'Awning is extending'
                  }))
 
         self.ioloop = tornado.ioloop.IOLoop.current()
@@ -104,20 +104,20 @@ class AnwingWebThing(Thing):
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
-        self.logger.info("anwing is retracting " + str(value))
+        self.logger.info("awning is retracting " + str(value))
 
     def set_extending(self, value):
         self.extending.notify_of_external_update(value)
-        self.logger.info("anwing is extending " + str(value))
+        self.logger.info("awning is extending " + str(value))
 
 
 
 def run_server(hostname: str, port: int, filename: str, description: str):
-    anwings = [Anwing(motor) for motor in load_tb6612fng(filename)]
-    anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
+    awnings = [Awning(motor) for motor in load_tb6612fng(filename)]
+    awning_webthings = [AnwingWebThing(description, anwing) for anwing in awnings]
 
-    server = WebThingServer(MultipleThings(anwing_webthings, 'Awnings'), hostname=hostname, port=port)
-    Switch(pin_forward=17, pin_backward=27, anwings = anwings)
+    server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), hostname=hostname, port=port)
+    Switch(pin_forward=17, pin_backward=27, awnings= awnings)
 
     try:
         logging.info('starting the server')

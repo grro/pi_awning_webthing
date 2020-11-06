@@ -1,7 +1,7 @@
 import logging
 from string import Template
 from pi_awning_webthing.app import App
-from pi_awning_webthing.awning_thing import run_server
+from pi_awning_webthing.awning_webthing import run_server
 
 PACKAGENAME = 'pi_awning_webthing'
 ENTRY_POINT = "awning"
@@ -38,11 +38,11 @@ class AwningApp(App):
 
     def do_process_command(self, command:str, hostname: str, port: int, verbose: bool, args) -> bool:
         if command == 'listen' and (args.filename is not None):
-            logging.info("running " + self.packagename + " on " + hostname + "/" + str(port) + " with config " + args.filename)
+            logging.info("running " + self.packagename + " on " + hostname + ":" + str(port) + " with config " + args.filename)
             run_server(hostname, port, args.filename, self.description)
             return True
         elif args.command == 'register' and (args.filename is not None):
-            logging.info("register " + self.packagename + " on " + hostname + "/" + str(port) + " with config " + args.filename)
+            logging.info("register " + self.packagename + " on " + hostname + ":" + str(port) + " with config " + args.filename)
             unit = UNIT_TEMPLATE.substitute(packagename=self.packagename, entrypoint=self.entrypoint, hostname=hostname, port=port, verbose=verbose, filename=args.filename)
             self.unit.register(hostname, port, unit)
             return True

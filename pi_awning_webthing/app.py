@@ -48,7 +48,7 @@ class App(ABC):
                 print(" sudo " + self.entrypoint + " --command log --hostname " + host + " --port " + port)
 
 
-def handle_command(self):
+    def handle_command(self):
         parser = argparse.ArgumentParser(description=self.description)
         parser.add_argument('--command', metavar='command', required=False, type=str, help='the command. Supported commands are: listen (run the webthing service), register (register and starts the webthing service as a systemd unit, deregister (deregisters the systemd unit), log (prints the log)')
         parser.add_argument('--port', metavar='port', required=False, type=int, help='the port of the webthing serivce')

@@ -1,7 +1,7 @@
 import logging
 import RPi.GPIO as GPIO
 from typing import List
-from pi_awning_webthing.awning import Anwing
+from pi_awning_webthing.awning import Awning
 
 
 class Switch:
@@ -10,8 +10,8 @@ class Switch:
     MOVE_BACKWARD = (False, True)
     IDLE = (True, True)
 
-    def __init__(self, pin_forward: int, pin_backward: int, anwings: List[Anwing]):
-        self.anwings = anwings
+    def __init__(self, pin_forward: int, pin_backward: int, awnings: List[Awning]):
+        self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
         self.state = self.STOP
@@ -39,13 +39,13 @@ class Switch:
         try:
             if self.state != new_state:
                 if new_state == self.MOVE_FORWARD:
-                    for anwing in self.anwings:
+                    for anwing in self.awnings:
                         anwing.set_target_position(100)
                 elif new_state == self.MOVE_BACKWARD:
-                    for anwing in self.anwings:
+                    for anwing in self.awnings:
                         anwing.set_target_position(0)
                 elif new_state == self.STOP:
-                    for anwing in self.anwings:
+                    for anwing in self.awnings:
                         current_pos = anwing.get_current_position()
                         anwing.set_target_position(current_pos)
                 else:

@@ -141,7 +141,7 @@ class Backward(Movement):
         self.awning.listener.on_extenting_updated(False)
 
 
-class Anwing:
+class Awning:
 
     def __init__(self, motor: Motor):
         self.name = motor.name
