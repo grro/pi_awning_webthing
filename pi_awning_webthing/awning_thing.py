@@ -113,7 +113,6 @@ class AnwingWebThing(Thing):
 
 
 def run_server(hostname: str, port: int, filename: str, description: str):
-
     anwings = [Anwing(motor) for motor in load_tb6612fng(filename)]
     anwing_webthings = [AnwingWebThing(description, anwing) for anwing in anwings]
 
