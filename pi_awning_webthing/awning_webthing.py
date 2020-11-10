@@ -45,7 +45,7 @@ class AnwingWebThing(Thing):
                      self.target_position,
                      metadata={
                          '@type': 'LevelProperty',
-                         'title': 'Awning target position (0-100)',
+                         'title': 'Awning target position',
                          "type": "integer",
                          "minimum": 0,
                          "maximum": 100,
@@ -60,7 +60,7 @@ class AnwingWebThing(Thing):
                      self.current_position,
                      metadata={
                          '@type': 'LevelProperty',
-                         'title': 'Awning current position (0-100)',
+                         'title': 'Awning current position',
                          "type": "integer",
                          'minimum': 0,
                          'maximum': 100,
