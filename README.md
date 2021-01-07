@@ -14,7 +14,7 @@ lane4, 10, 9, 0.5
 For TB6612FNG driven motors the filename has to include the term *tb6612fng* such as tb6612fng_motors.config. Regarding the 
 hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.md)
 
-To install this software you may use Docker or [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
+To install this software you may use [Docker](https://phoenixnap.com/kb/docker-on-raspberry-pi) or [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
 
 **Docker approach**
 ```
