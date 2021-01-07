@@ -114,11 +114,12 @@ class AnwingWebThing(Thing):
 
 
 
-def run_server(port: int, filename: str, description: str):
+def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_backward: int, description: str):
     awnings = [Awning(motor) for motor in load_tb6612fng(filename)]
     awning_webthings = [AnwingWebThing(description, anwing) for anwing in awnings]
     server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
-    Switch(pin_forward=17, pin_backward=27, awnings= awnings)
+    if switch_pin_forward > 0 and switch_pin_backward > 0:
+        Switch(switch_pin_forward, switch_pin_backward, awnings= awnings)
 
     try:
         logging.info('starting the server')

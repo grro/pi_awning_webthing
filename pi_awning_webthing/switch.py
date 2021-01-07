@@ -22,7 +22,7 @@ class Switch:
         GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
         GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
-        logging.info("bound to PIN_FORWARD=" + str(self.pin_forward) + " and PIN_BACKWARD=" + str(self.pin_backward))
+        logging.info("Switch bound to pin_forward=" + str(self.pin_forward) + " and pin_backward=" + str(self.pin_backward))
 
     def is_forward(self) -> bool:
         return self.state[0]

@@ -18,7 +18,7 @@ To install this software you may use [Docker](https://phoenixnap.com/kb/docker-o
 
 **Docker approach**
 ```
-sudo docker run --privileged -p 9500:9500 -v /etc/awning/:/etc/awning/ -e filename=/etc/awning/tb6612fng_motors.config  grro/pi_awning_webthing:0.2.0
+sudo docker run --privileged -p 9500:9500 -v /etc/awning/:/etc/awning/ -e filename=/etc/awning/tb6612fng_motors.config  -e switch_pin_forward=17 -e switch_pin_backward=27 grro/pi_awning_webthing:0.2.0
 ```
 
 **PIP approach**
@@ -28,14 +28,14 @@ sudo pip install pi-awning-webthing
 
 After this installation you may start the webthing http endpoint inside your python code or via command line using
 ```
-sudo awning --command listen--port 9500 --filename /etc/awning/tb6612fng_motors.config 
+sudo awning --command listen--port 9500 --filename /etc/awning/tb6612fng_motors.config --switch_pin_forward 17 --switch_pin_backward 27
 ```
 Here, the webthing API will be bind on the local port 9500 
 
 Alternatively to the *listen* command, you can use the *register* command to register and start the webthing service as systemd unit. 
 By doing this the webthing service will be started automatically on boot. Starting the server manually using the *listen* command is no longer necessary. 
 ```
-sudo awning --command register --port 9500 --filename /etc/awning/tb6612fng_motors.config 
+sudo awning --command register --port 9500 --filename /etc/awning/tb6612fng_motors.config --switch_pin_forward 17 --switch_pin_backward 27 
 ```
 
 The awning service exposes an http webthing endpoint supporting the awning properties. E.g. 
