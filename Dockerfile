@@ -3,7 +3,12 @@ FROM python:3.9.1-alpine
 ENV port 9500
 
 RUN apk add build-base
-ADD . /tmp/
+
+ADD setup.py /tmp/.
+ADD README.md /tmp/.
+ADD pi_awning_webthing /tmp/pi_awning_webthing/.
+
+RUN ls /tmp/
 WORKDIR /tmp/
 RUN  python /tmp/setup.py install
 WORKDIR /
