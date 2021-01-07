@@ -43,7 +43,7 @@ class AwningApp(App):
             return True
         elif args.command == 'register' and (args.filename is not None):
             logging.info("register " + self.packagename + " on port " + str(port) + " with config " + args.filename)
-            unit = UNIT_TEMPLATE.substitute(packagename=self.packagename, entrypoint=self.entrypoint, hostname=hostname, port=port, verbose=verbose, filename=args.filename)
+            unit = UNIT_TEMPLATE.substitute(packagename=self.packagename, entrypoint=self.entrypoint, port=port, verbose=verbose, filename=args.filename)
             self.unit.register(port, unit)
             return True
         else:
