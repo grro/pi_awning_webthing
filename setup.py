@@ -34,7 +34,7 @@ setup(
         'webthings', 'awning', 'control', 'pation', 'terrace'
     ],
     install_requires=[
-        'webthing',
+        'webthing==0.15.0',
         'schedule',
         'RPi.GPIO'
     ],

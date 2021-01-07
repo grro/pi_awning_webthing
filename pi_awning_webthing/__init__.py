@@ -15,7 +15,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=$entrypoint --command listen --verbose $verbose --hostname hostname --port $port --filename $filename
+ExecStart=$entrypoint --command listen --verbose $verbose --port $port --filename $filename
 SyslogIdentifier=$packagename
 StandardOutput=syslog
 StandardError=syslog
@@ -36,15 +36,15 @@ class AwningApp(App):
     def do_additional_listen_example_params(self):
         return "--filename /etc/awning/tb6612fng_motors.config"
 
-    def do_process_command(self, command:str, hostname: str, port: int, verbose: bool, args) -> bool:
+    def do_process_command(self, command:str, port: int, verbose: bool, args) -> bool:
         if command == 'listen' and (args.filename is not None):
-            logging.info("running " + self.packagename + " on " + hostname + ":" + str(port) + " with config " + args.filename)
-            run_server(hostname, port, args.filename, self.description)
+            logging.info("running " + self.packagename + " on port " + str(port) + " with config " + args.filename)
+            run_server(port, args.filename, self.description)
             return True
         elif args.command == 'register' and (args.filename is not None):
-            logging.info("register " + self.packagename + " on " + hostname + ":" + str(port) + " with config " + args.filename)
+            logging.info("register " + self.packagename + " on port " + str(port) + " with config " + args.filename)
             unit = UNIT_TEMPLATE.substitute(packagename=self.packagename, entrypoint=self.entrypoint, hostname=hostname, port=port, verbose=verbose, filename=args.filename)
-            self.unit.register(hostname, port, unit)
+            self.unit.register(port, unit)
             return True
         else:
             return False

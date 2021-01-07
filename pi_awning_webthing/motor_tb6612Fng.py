@@ -22,7 +22,12 @@ def load_tb6612fng(filename: str) -> List[Motor]:
                 if not line.startswith("#") and len(line) > 0:
                     try:
                         parts = line.split(",")
-                        motors.append(TB6612FNGMotor(parts[0].strip(), int(parts[1].strip()), int(parts[2].strip()), float(parts[3].strip())))
+                        name = parts[0].strip()
+                        pin_forward = int(parts[1].strip())
+                        pin_backward = int(parts[2].strip())
+                        step_duration = float(parts[3].strip())
+                        motors.append(TB6612FNGMotor(name, pin_forward, pin_backward, step_duration))
+                        logging.info("config entry found: " + name + " with pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration))
                     except Exception as e:
                         logging.error("invalid syntax in line " + line + "  ignoring it" + str(e))
     return motors

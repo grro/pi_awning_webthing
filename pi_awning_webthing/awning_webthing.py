@@ -114,11 +114,10 @@ class AnwingWebThing(Thing):
 
 
 
-def run_server(hostname: str, port: int, filename: str, description: str):
+def run_server(port: int, filename: str, description: str):
     awnings = [Awning(motor) for motor in load_tb6612fng(filename)]
     awning_webthings = [AnwingWebThing(description, anwing) for anwing in awnings]
-
-    server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), hostname=hostname, port=port)
+    server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
     Switch(pin_forward=17, pin_backward=27, awnings= awnings)
 
     try:
