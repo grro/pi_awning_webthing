@@ -1,7 +1,6 @@
 import logging
 import sys
 import time
-import schedule
 from datetime import datetime
 from abc import ABC, abstractmethod
 from threading import Thread
@@ -142,6 +141,8 @@ class Backward(Movement):
 
 
 class Awning:
+    PERIODIC_CALIBRATE_ON_HOUR = 2
+    PERIODIC_CALIBRATE_ON_MINUTE = 40
 
     def __init__(self, motor: Motor):
         self.name = motor.name
@@ -151,8 +152,21 @@ class Awning:
         self.motor = motor
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
-        schedule.every().day.at("04:40").do(self.calibrate)
-        schedule.run_pending()
+        Thread(target=self.__periodic_calibrate, daemon=True).start()
+
+    def __periodic_calibrate(self):
+        time.sleep(10)
+        self.calibrate()
+        already_scheduled = False
+        while True:
+            now = datetime.now()
+            if self.PERIODIC_CALIBRATE_ON_HOUR <= now.hour < (self.PERIODIC_CALIBRATE_ON_HOUR + 1) and now.minute >= self.PERIODIC_CALIBRATE_ON_MINUTE:
+                if not already_scheduled:
+                    self.calibrate()
+                already_scheduled = True
+            else:
+                already_scheduled = False
+            time.sleep(20 * 60)
 
     def register_listener(self, listener: AwningPropertyListener):
         self.listener = listener
@@ -172,8 +186,6 @@ class Awning:
         self.movement = self.movement.drive_to(new_position)
 
     def __process_move(self):
-        time.sleep(1)
-        self.calibrate()
         while True:
             try:
                 self.movement = self.movement.process()

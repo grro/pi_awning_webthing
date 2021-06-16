@@ -35,7 +35,6 @@ setup(
     ],
     install_requires=[
         'webthing==0.15.0',
-        'schedule',
         'RPi.GPIO'
     ],
     classifiers=[
