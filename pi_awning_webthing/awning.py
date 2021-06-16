@@ -141,8 +141,8 @@ class Backward(Movement):
 
 
 class Awning:
-    PERIODIC_CALIBRATE_ON_HOUR = 2
-    PERIODIC_CALIBRATE_ON_MINUTE = 40
+    PERIODIC_CALIBRATE_ON_HOUR = 3
+    PERIODIC_CALIBRATE_ON_MINUTE = 10
 
     def __init__(self, motor: Motor):
         self.name = motor.name
@@ -166,7 +166,7 @@ class Awning:
                 already_scheduled = True
             else:
                 already_scheduled = False
-            time.sleep(20 * 60)
+            time.sleep(10 * 60)
 
     def register_listener(self, listener: AwningPropertyListener):
         self.listener = listener
