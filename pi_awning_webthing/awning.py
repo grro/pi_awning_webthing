@@ -172,9 +172,22 @@ class Awning:
         self.listener = listener
 
     def calibrate(self):
+        saved_target_pos = self.get_target_position()
         self.logger.info("calibrating")
         self.movement = Idling(self.motor, 100, self.sec_per_slot, self) # set position to 100%
         self.set_target_position(0)   # and backward to position 0. This ensures that the awning is calibrated with position 0
+        # wait until completed
+        for i in range (0, 60):
+            if self.is_target_reached():
+                break
+            else:
+                time.sleep(5)
+        if self.get_current_position() != saved_target_pos:
+            self.logger.info("move to previous target position " + str(saved_target_pos))
+            self.set_target_position(saved_target_pos)
+
+    def is_target_reached(self) -> bool:
+        return self.movement.is_target_reached()
 
     def get_current_position(self) -> int:
         return self.movement.get_current_pos()
