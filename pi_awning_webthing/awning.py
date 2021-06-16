@@ -151,11 +151,12 @@ class Awning:
         self.listener = AwningPropertyListener()
         self.motor = motor
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
+        self.set_target_position(0)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
         Thread(target=self.__periodic_calibrate, daemon=True).start()
 
     def __periodic_calibrate(self):
-        time.sleep(10)
+        time.sleep(60)
         self.calibrate()
         already_scheduled = False
         while True:
