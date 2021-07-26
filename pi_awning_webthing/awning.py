@@ -145,15 +145,18 @@ class Awning:
     PERIODIC_CALIBRATE_ON_MINUTE = 10
 
     def __init__(self, motor: Motor):
-        self.name = motor.name
         self.sec_per_slot = motor.sec_per_step
         self.listener = AwningPropertyListener()
         self.motor = motor
-        self.lock = Lock()
+        self.__lock = Lock()
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         self.set_target_position(0)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
         Thread(target=self.__periodic_calibrate, daemon=True).start()
+
+    @property
+    def name(self) -> str:
+        return self.motor.name
 
     def __periodic_calibrate(self):
         time.sleep(60)
@@ -197,12 +200,12 @@ class Awning:
         return self.movement.get_target_pos()
 
     def set_target_position(self, new_position: int):
-        with self.lock:
+        with self.__lock:
             self.movement = self.movement.drive_to(new_position)
 
     def __process_move(self):
         while True:
-            with self.lock:
+            with self.__lock:
                 try:
                     self.movement = self.movement.process()
                 except:

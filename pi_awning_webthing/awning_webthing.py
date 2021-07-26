@@ -102,7 +102,7 @@ class AnwingWebThing(Thing):
 
     def set_current_position(self, value):
         self.current_position.notify_of_external_update(value)
-        logging.debug("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
+        logging.debug(self.awning.name + " position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
