@@ -58,7 +58,7 @@ class TB6612FNGMotor(Motor):
 
     def stop(self):
         if self.pin_backward_is_on or self.pin_forward_is_on:
-            logging.info("stop motor")
+            logging.info("stop motor (forward and backward)")
         if self.pin_backward_is_on:
             GPIO.output(self.pin_backward, 0)
             self.pin_backward_is_on = False
