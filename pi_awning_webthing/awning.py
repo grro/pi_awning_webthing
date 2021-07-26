@@ -3,7 +3,7 @@ import sys
 import time
 from datetime import datetime
 from abc import ABC, abstractmethod
-from threading import Thread
+from threading import Thread, Lock
 
 
 class Motor(ABC):
@@ -147,9 +147,9 @@ class Awning:
     def __init__(self, motor: Motor):
         self.name = motor.name
         self.sec_per_slot = motor.sec_per_step
-        self.logger = logging.getLogger(self.name)
         self.listener = AwningPropertyListener()
         self.motor = motor
+        self.lock = Lock()
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         self.set_target_position(0)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
@@ -174,7 +174,7 @@ class Awning:
 
     def calibrate(self):
         saved_target_pos = self.get_target_position()
-        self.logger.info("calibrating")
+        logging.info("calibrating")
         self.movement = Idling(self.motor, 100, self.sec_per_slot, self) # set position to 100%
         self.set_target_position(0)   # and backward to position 0. This ensures that the awning is calibrated with position 0
         # wait until completed
@@ -184,7 +184,7 @@ class Awning:
             else:
                 time.sleep(5)
         if self.get_current_position() != saved_target_pos:
-            self.logger.info("move to previous target position " + str(saved_target_pos))
+            logging.info("move to previous target position " + str(saved_target_pos))
             self.set_target_position(saved_target_pos)
 
     def is_target_reached(self) -> bool:
@@ -197,15 +197,17 @@ class Awning:
         return self.movement.get_target_pos()
 
     def set_target_position(self, new_position: int):
-        self.movement = self.movement.drive_to(new_position)
+        with self.lock:
+            self.movement = self.movement.drive_to(new_position)
 
     def __process_move(self):
         while True:
-            try:
-                self.movement = self.movement.process()
-            except:
-                self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
-                self.logger.warning('move operation failed '  + str(sys.exc_info()))
-            finally:
-                pause_sec = self.movement.get_pause_sec()
-                time.sleep(pause_sec)
+            with self.lock:
+                try:
+                    self.movement = self.movement.process()
+                except:
+                    self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
+                    logging.warning('move operation failed ' + str(sys.exc_info()))
+                finally:
+                    pause_sec = self.movement.get_pause_sec()
+            time.sleep(pause_sec)

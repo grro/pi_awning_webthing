@@ -106,6 +106,7 @@ class Unit:
             pass
 
     def printlog(self, port:int):
+        print("sudo journalctl -n 1000 -u " + self.servicename(port))
         system("sudo journalctl -f -u " + self.servicename(port))
 
     def servicename(self, port: int):

@@ -34,7 +34,6 @@ class AnwingWebThing(Thing):
             ['MultiLevelSensor'],
             description
         )
-        self.logger = logging.getLogger(awning.name)
         self.awning = awning
         self.awning.register_listener(WebThingAwningPropertyListener(self))
 
@@ -102,29 +101,33 @@ class AnwingWebThing(Thing):
 
     def set_current_position(self, value):
         self.current_position.notify_of_external_update(value)
-        self.logger.info("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
+        logging.info("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
-        self.logger.info("awning is retracting " + str(value))
+        logging.info("awning is retracting " + str(value))
 
     def set_extending(self, value):
         self.extending.notify_of_external_update(value)
-        self.logger.info("awning is extending " + str(value))
+        logging.info("awning is extending " + str(value))
 
 
 
 def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_backward: int, description: str):
-    awnings = [Awning(motor) for motor in load_tb6612fng(filename)]
-    awning_webthings = [AnwingWebThing(description, anwing) for anwing in awnings]
-    server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
-    if switch_pin_forward > 0 and switch_pin_backward > 0:
-        Switch(switch_pin_forward, switch_pin_backward, awnings= awnings)
 
-    try:
-        logging.info('starting the server')
-        server.start()
-    except KeyboardInterrupt:
-        logging.info('stopping the server')
-        server.stop()
-        logging.info('done')
+    while True:
+        awnings = [Awning(motor) for motor in load_tb6612fng(filename)]
+        awning_webthings = [AnwingWebThing(description, anwing) for anwing in awnings]
+        server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
+        if switch_pin_forward > 0 and switch_pin_backward > 0:
+            Switch(switch_pin_forward, switch_pin_backward, awnings= awnings)
+        try:
+            logging.info('starting the server')
+            server.start()
+        except KeyboardInterrupt:
+            logging.info('stopping the server')
+            server.stop()
+            logging.info('done')
+            return
+        except Exception as e:
+            logging.error(e)

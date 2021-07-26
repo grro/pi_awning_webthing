@@ -34,10 +34,9 @@ class Switch:
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
         new_state = (is_forward, is_backward)
-        if new_state != self.state:
-            logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
         try:
             if self.state != new_state:
+                logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
                 if new_state == self.MOVE_FORWARD:
                     for anwing in self.awnings:
                         anwing.set_target_position(100)
@@ -50,5 +49,7 @@ class Switch:
                         anwing.set_target_position(current_pos)
                 else:
                     pass
+        except Exception as e:
+            logging.error(e)
         finally:
             self.state = new_state
