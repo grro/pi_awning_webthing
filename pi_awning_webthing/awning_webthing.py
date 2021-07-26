@@ -2,6 +2,7 @@ from webthing import (MultipleThings, Property, Thing, Value, WebThingServer)
 from pi_awning_webthing.awning import Awning, AwningPropertyListener
 from pi_awning_webthing.switch import Switch
 from pi_awning_webthing.motor_tb6612Fng import load_tb6612fng
+from time import sleep
 import logging
 import tornado.ioloop
 
@@ -101,7 +102,7 @@ class AnwingWebThing(Thing):
 
     def set_current_position(self, value):
         self.current_position.notify_of_external_update(value)
-        logging.info("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
+        logging.debug("position " + str(value) + " reached (target=" + str(self.target_position.get()) + ")")
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
@@ -131,3 +132,4 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
             return
         except Exception as e:
             logging.error(e)
+            sleep(3)
