@@ -97,13 +97,10 @@ class Movement:
     def __create_movement(self, new_position: int):
         current_pos = self.get_current_pos()
         if (new_position - current_pos) > self.SLOT_TOLERANCE:
-            logging.debug("forwarding")
             return Forward(self.motor, current_pos, new_position, self.sec_per_slot, self.awning)
         elif (current_pos - new_position) > self.SLOT_TOLERANCE:
-            logging.debug("backwarding")
             return Backward(self.motor, current_pos, new_position, self.sec_per_slot, self.awning)
         else:
-            logging.debug("idling")
             return Idling(self.motor, current_pos, self.sec_per_slot, self.awning)
 
 
