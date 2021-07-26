@@ -106,11 +106,9 @@ class AnwingWebThing(Thing):
 
     def set_retracting(self, value):
         self.retracting.notify_of_external_update(value)
-        logging.info("awning is retracting " + str(value))
 
     def set_extending(self, value):
         self.extending.notify_of_external_update(value)
-        logging.info("awning is extending " + str(value))
 
 
 
