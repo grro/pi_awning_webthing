@@ -1,9 +1,9 @@
 # pi_awning_webthing
-A web connected terrace awning controller on Raspberry Pi
+A web based patio awning control on Raspberry Pi.
 
-Currently supported are [TB6612FNG driven](https://www.pololu.com/product/713) motors such 
-as [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396). 
-The concrete motor configuration(s) are defined by using a config file such s shown below. 
+Currently supported are [TB6612FNG powered](https://www.pololu.com/product/713) motors as
+[DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396).
+The specific motor configuration(s) are defined using a configuration file as shown below.
 ```
 # name, gpio_forward, gpio_backward, step_duration_in_sec
 lane1, 2, 3, 0.5
@@ -11,10 +11,10 @@ lane2, 19, 26, 0.5
 lane3, 5, 6, 0.5
 lane4, 10, 9, 0.5
 ```
-For TB6612FNG driven motors the filename has to include the term *tb6612fng* such as tb6612fng_motors.config. Regarding the 
-hardware setup and wiring please refer [example hardware setup](doc/dgo-3512ada.md)
+For motors with TB6612FNG, the file name must contain the term *tb6612fng*, e.g. tb6612fng_motors.config. Concerning the
+hardware setup and wiring please read [Example Hardware Setup](doc/dgo-3512ada.md).
 
-To install this software you may use [Docker](https://phoenixnap.com/kb/docker-on-raspberry-pi) or [PIP](https://realpython.com/what-is-pip/) package manager such as shown below
+To install this software, you can use the [Docker](https://phoenixnap.com/kb/docker-on-raspberry-pi) or [PIP](https://realpython.com/what-is-pip/) package manager as shown below
 
 **Docker approach**
 ```
@@ -26,19 +26,19 @@ sudo docker run --privileged -p 9500:9500 -v /etc/awning/:/etc/awning/ -e filena
 sudo pip install pi-awning-webthing
 ```
 
-After this installation you may start the webthing http endpoint inside your python code or via command line using
+After installation, you can start the Webthing http endpoint in your Python code or from the command line by typing
 ```
 sudo awning --command listen--port 9500 --filename /etc/awning/tb6612fng_motors.config
 ```
-Here, the webthing API will be bind on the local port 9500 
+This binds the Webthing API to the local port 9500.
 
-Alternatively to the *listen* command, you can use the *register* command to register and start the webthing service as systemd unit. 
-By doing this the webthing service will be started automatically on boot. Starting the server manually using the *listen* command is no longer necessary. 
+As an alternative to the *list* command, you can also use the *register* command to register and start the webthing service as a systemd entity.
+This will automatically start the webthing service at boot time. Starting the server manually with the *listen* command is no longer necessary.
 ```
 sudo awning --command register --port 9500 --filename /etc/awning/tb6612fng_motors.config 
 ```
 
-The awning service exposes an http webthing endpoint supporting the awning properties. E.g. 
+The awning service provides an http webthing endpoint that supports the awning properties. E.g. 
 ```
 # webthing has been started on host 192.168.0.23
 

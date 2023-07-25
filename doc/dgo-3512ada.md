@@ -1,16 +1,16 @@
 # example hardware setup
 
-Here the setup of a motorized awning with 4 lanes is descriped
-![anwing picture](awning_small.jpg)
+Here the construction of a motorized awning with 4 panels is described
+![awning picture](awning_small.jpg)
 
-The awning will be extended and retracted by using a bidirectional DC motor [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396) motor is used. 
-To control the motor the [TB6612FNG](https://www.pololu.com/product/713) dual motor driver is used. 
+The awning is extended and retracted using a bidirectional DC motor [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396).
+The [TB6612FNG](https://www.pololu.com/product/713) dual motor driver is used to control the motor.
 
-Extracting and expanding is time-controlled. This means the motor will be supplied with forward or backward power for a certain period of time. 
-To save the motor a limit switch is used which will interrupt the power circuit, if the end position is reached.
- 
-![awning picture](switch_small.jpg)
+The extension and retraction is time controlled. That is, forward or reverse current is supplied to the motor for a specified time.
+To protect the motor, a limit switch is used to break the circuit when the end position is reached.
 
-The motor driver is connected with a Rasperry Pi Zero using the layout as shown below:
+![awning_image](switch_small.jpg)
+
+The motor driver is connected to a Rasperry Pi Zero, with the layout as shown below:
  
 ![circuit board](circuitboard.png)
