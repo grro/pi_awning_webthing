@@ -23,6 +23,18 @@ class AwningWebThing(Thing):
         self.awning = awning
         self.awning.add_listener(self.on_value_changed)
 
+        self.name = Value(self.awning.name)
+        self.add_property(
+            Property(self,
+                     'name',
+                     self.name,
+                     metadata={
+                         'title': 'Name',
+                         "type": "sting",
+                         'description': 'the name',
+                         'readOnly': True
+                     }))
+
         self.position = Value(self.awning.get_position(), self.awning.set_position)
         self.add_property(
             Property(self,
