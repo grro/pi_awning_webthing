@@ -159,12 +159,12 @@ class PiAwning(Awning):
     PERIODIC_CALIBRATE_ON_MINUTE = 10
 
     def __init__(self, motor: Motor):
-        self.sec_per_slot = motor.sec_per_step
         self.motor = motor
+        super().__init__(self.motor.name)
+        self.sec_per_slot = motor.sec_per_step
         self.__lock = Lock()
         self.movement = Idling(self.motor, 0, self.sec_per_slot, self)
         self.set_position(0)
-        super().__init__(self.motor.name)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
         Thread(target=self.__periodic_calibrate, daemon=True).start()
 
