@@ -214,6 +214,7 @@ class PiAwning(Awning):
 
     def set_position(self, new_position: int):
         with self.__lock:
+            logging.info(self.name + " set position: " + str(new_position))
             self.movement = self.movement.drive_to(new_position)
 
     def __process_move(self):
@@ -251,7 +252,8 @@ class Awnings(Awning):
         else:
             return int(total/len(positions))
 
-    def set_position(self, target_position: int):
-        [awning.set_position(target_position) for awning in self.__awnings]
+    def set_position(self, new_position: int):
+        logging.info(self.name + " set position: " + str(new_position))
+        [awning.set_position(new_position) for awning in self.__awnings]
 
 
