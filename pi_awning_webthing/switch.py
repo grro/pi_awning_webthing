@@ -40,15 +40,15 @@ class Switch:
         try:
             if new_state == self.MOVE_FORWARD:
                 if self.awnings.is_moving():
-                    self.awnings.set_position(100)
-                else:
                     self.awnings.stop()
+                else:
+                    self.awnings.set_position(100)
 
             elif new_state == self.MOVE_BACKWARD:
                 if self.awnings.is_moving():
-                    self.awnings.set_position(0)
-                else:
                     self.awnings.stop()
+                else:
+                    self.awnings.set_position(0)
         except Exception as e:
             logging.error(e)
         finally:
