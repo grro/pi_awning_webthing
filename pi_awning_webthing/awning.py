@@ -207,7 +207,7 @@ class PiAwning(Awning):
         return self.movement.get_current_pos()
 
     def is_target_reached(self) -> bool:
-        return self.movement.is_target_reached()
+        return self.__get_current_position() == self.get_position()
 
     def get_position(self) -> int:
         return self.movement.get_target_pos()
