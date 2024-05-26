@@ -31,6 +31,9 @@ class Awning(ABC):
     def is_moving(self) -> bool:
         pass
 
+    def stop(self):
+        self.set_position(self.get_position())
+
     def add_listener(self, listener):
         self.__listeners.add(listener)
 
@@ -272,7 +275,7 @@ class Awnings(Awning):
 
     def stop(self):
         for anwing in self.__awnings:
-            anwing.set_position(anwing.get_position())
+            anwing.stop()
 
     def get_position(self) -> int:
         positions = [awning.get_position() for awning in self.__awnings]

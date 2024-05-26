@@ -84,7 +84,7 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
         server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
 
         if switch_pin_forward > 0 and switch_pin_backward > 0:
-            Switch(switch_pin_forward, switch_pin_backward, awning=anwing_all)
+            Switch(switch_pin_forward, switch_pin_backward, awnings=anwing_all)
 
         try:
             logging.info('starting the server')

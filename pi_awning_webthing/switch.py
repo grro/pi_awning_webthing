@@ -36,20 +36,18 @@ class Switch:
         is_backward = GPIO.input(self.pin_backward) >= 1
 
         new_state = (is_forward, is_backward)
-        logging.info("new state " + str(new_state) + " is_moving=" + str(self.awnings.is_moving()))
+        logging.info("new state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
         try:
             if new_state == self.MOVE_FORWARD:
                 if self.awnings.is_moving():
                     self.awnings.set_position(100)
                 else:
-                    # stop
                     self.awnings.stop()
 
             elif new_state == self.MOVE_BACKWARD:
                 if self.awnings.is_moving():
                     self.awnings.set_position(0)
                 else:
-                    # stop
                     self.awnings.stop()
         except Exception as e:
             logging.error(e)
