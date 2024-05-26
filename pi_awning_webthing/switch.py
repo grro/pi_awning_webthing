@@ -2,7 +2,7 @@ import logging
 import RPi.GPIO as GPIO
 from datetime import datetime, timedelta
 from typing import List
-from pi_awning_webthing.awning import Awning
+from pi_awning_webthing.awning import Awnings
 
 
 class Switch:
@@ -11,8 +11,8 @@ class Switch:
     MOVE_BACKWARD = (False, True)
     IDLE = (True, True)
 
-    def __init__(self, pin_forward: int, pin_backward: int, awning: Awning):
-        self.awning = awning
+    def __init__(self, pin_forward: int, pin_backward: int, awnings: Awnings):
+        self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
         self.state = self.STOP
@@ -36,21 +36,21 @@ class Switch:
         is_backward = GPIO.input(self.pin_backward) >= 1
 
         new_state = (is_forward, is_backward)
-        logging.info("new state " + str(new_state) + " is_moving=" + str(self.awning.is_moving()))
+        logging.info("new state " + str(new_state) + " is_moving=" + str(self.awnings.is_moving()))
         try:
             if new_state == self.MOVE_FORWARD:
-                if self.awning.is_moving():
-                    self.awning.set_position(100)
+                if self.awnings.is_moving():
+                    self.awnings.set_position(100)
                 else:
                     # stop
-                    self.awning.set_position(self.awning.get_position())
+                    self.awnings.stop()
 
             elif new_state == self.MOVE_BACKWARD:
-                if self.awning.is_moving():
-                    self.awning.set_position(0)
+                if self.awnings.is_moving():
+                    self.awnings.set_position(0)
                 else:
                     # stop
-                    self.awning.set_position(self.awning.get_position())
+                    self.awnings.stop()
         except Exception as e:
             logging.error(e)
         finally:

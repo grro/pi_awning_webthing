@@ -270,6 +270,10 @@ class Awnings(Awning):
                 return True
         return False
 
+    def stop(self):
+        for anwing in self.__awnings:
+            anwing.set_position(anwing.get_position())
+
     def get_position(self) -> int:
         positions = [awning.get_position() for awning in self.__awnings]
         total = sum(positions)
