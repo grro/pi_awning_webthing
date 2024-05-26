@@ -28,7 +28,11 @@ class Awning(ABC):
         pass
 
     @abstractmethod
-    def is_moving(self) -> bool:
+    def is_moving_forward(self) -> bool:
+        pass
+
+    @abstractmethod
+    def is_moving_backward(self) -> bool:
         pass
 
     @abstractmethod
@@ -86,7 +90,10 @@ class Movement:
     def get_pause_sec(self):
         return 0.5
 
-    def is_moving(self) -> bool:
+    def is_moving_forward(self) -> bool:
+        return False
+
+    def is_moving_backward(self) -> bool:
         return False
 
     def get_current_pos(self) -> int:
@@ -139,9 +146,6 @@ class Idling(Movement):
         self.motor.stop()
         self.awning.on_updated()
 
-    def is_moving(self) -> bool:
-        return False
-
     def get_pause_sec(self):
         pause_sec = int(self.SLOT_TOLERANCE * self.sec_per_slot * 1.4)
         if pause_sec < 3:
@@ -159,7 +163,7 @@ class Forward(Movement):
         self.motor.forward()
         self.awning.on_updated()
 
-    def is_moving(self) -> bool:
+    def is_moving_forward(self) -> bool:
         return True
 
 
@@ -170,7 +174,7 @@ class Backward(Movement):
         self.motor.backward()
         self.awning.on_updated()
 
-    def is_moving(self) -> bool:
+    def is_moving_backward(self) -> bool:
         return True
 
 
@@ -233,8 +237,11 @@ class PiAwning(Awning):
     def is_target_reached(self) -> bool:
         return self.get_current_position() == self.get_position()
 
-    def is_moving(self) -> bool:
-        return self.movement.is_moving()
+    def is_moving_forward(self) -> bool:
+        return self.movement.is_moving_forward()
+
+    def is_moving_backward(self) -> bool:
+        return self.movement.is_moving_backward()
 
     def get_position(self) -> int:
         return self.movement.get_target_pos()
@@ -271,9 +278,17 @@ class Awnings(Awning):
                 return False
         return True
 
-    def is_moving(self) -> bool:
+
+    def is_moving_backward(self) -> bool:
         for anwing in self.__awnings:
-            if anwing.is_moving():
+            if anwing.is_moving_backward():
+                return True
+        return False
+
+
+    def is_moving_forward(self) -> bool:
+        for anwing in self.__awnings:
+            if anwing.is_moving_forward():
                 return True
         return False
 
