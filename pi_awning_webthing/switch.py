@@ -15,6 +15,7 @@ class Switch:
         self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
+        self.last_time_pressed_sec = time()
         self.state = self.IDLE
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
@@ -31,19 +32,24 @@ class Switch:
         new_state = (is_forward, is_backward)
         logging.info("\n\n\nnew state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
 
-        if new_state != self.state:
+        if time() > (self.last_time_pressed_sec + 0.3):
+            self.last_time_pressed_sec = time()
             try:
                 if new_state == self.MOVE_FORWARD:
                     if self.awnings.is_moving():
+                        logging.info("Forward and motion. stop")
                         self.awnings.stop()
                     else:
+                        logging.info("Forward set pos 0")
                         self.awnings.set_position(100)
                 elif new_state == self.MOVE_BACKWARD:
                     if self.awnings.is_moving():
+                        logging.info("Bckward and motion. stop")
                         self.awnings.stop()
                     else:
+                        logging.info("Bckward set pos 0")
                         self.awnings.set_position(0)
             except Exception as e:
                 logging.error(e)
-
-        self.state = new_state
+        else:
+            logging.info("double click")
