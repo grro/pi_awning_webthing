@@ -39,14 +39,14 @@ class Switch:
                 logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
                 if new_state == self.MOVE_FORWARD:
                     for anwing in self.awnings:
-                        anwing.set_target_position(100)
+                        anwing.set_position(100)
                 elif new_state == self.MOVE_BACKWARD:
                     for anwing in self.awnings:
-                        anwing.set_target_position(0)
+                        anwing.set_position(0)
                 elif new_state == self.STOP:
                     for anwing in self.awnings:
-                        current_pos = anwing.get_current_position()
-                        anwing.set_target_position(current_pos)
+                        current_pos = anwing.get_position()
+                        anwing.set_position(current_pos)
                 else:
                     pass
         except Exception as e:
