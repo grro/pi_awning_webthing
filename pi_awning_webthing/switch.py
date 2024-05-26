@@ -15,7 +15,7 @@ class Switch:
         self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
-        self.last_time_pressed_sec = time()
+        self.state = self.IDLE
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
@@ -31,8 +31,7 @@ class Switch:
         new_state = (is_forward, is_backward)
         logging.info("\n\n\nnew state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
 
-        if time() > (self.last_time_pressed_sec + 0.5):
-            self.last_time_pressed_sec = time()
+        if new_state != self.state:
             try:
                 if new_state == self.MOVE_FORWARD:
                     if self.awnings.is_moving():
