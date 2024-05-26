@@ -78,13 +78,13 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
 
     while True:
         awnings = [PiAwning(motor) for motor in load_tb6612fng(filename)]
-        if len(awnings) > 2:
-            awnings = [Awnings("all", awnings)] + awnings
+        anwing_all= Awnings("all", awnings)
+        awnings = [anwing_all] + awnings
         awning_webthings = [AwningWebThing(description, anwing) for anwing in awnings]
         server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
 
         if switch_pin_forward > 0 and switch_pin_backward > 0:
-            Switch(switch_pin_forward, switch_pin_backward, awnings= awnings)
+            Switch(switch_pin_forward, switch_pin_backward, awning=anwing_all)
 
         try:
             logging.info('starting the server')

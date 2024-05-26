@@ -264,6 +264,12 @@ class Awnings(Awning):
                 return False
         return True
 
+    def is_moving(self) -> bool:
+        for anwing in self.__awnings:
+            if anwing.is_moving():
+                return True
+        return False
+
     def get_position(self) -> int:
         positions = [awning.get_position() for awning in self.__awnings]
         total = sum(positions)
