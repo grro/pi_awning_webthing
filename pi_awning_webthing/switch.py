@@ -31,32 +31,35 @@ class Switch:
     def is_backward(self) -> bool:
         return self.state[1]
 
-    def is_target_reached(self) -> bool:
+    def is_moving(self) -> bool:
         for anwing in self.awnings:
-            if not anwing.is_target_reached():
-                return False
-        return True
+            if anwing.is_moving():
+                return True
+        return False
 
     def on_switch_updated(self, pin: int):
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
 
         new_state = (is_forward, is_backward)
+        logging.info("new state " + str(new_state) + " is_moving=" + str(self.is_moving()))
         try:
             if new_state == self.MOVE_FORWARD:
-                if self.is_target_reached():
+                if self.is_moving():
                     for anwing in self.awnings:
                         anwing.set_position(100)
                 else:
+                    # stop
                     for anwing in self.awnings:
                         current_pos = anwing.get_position()
                         anwing.set_position(current_pos)
 
             elif new_state == self.MOVE_BACKWARD:
-                if self.is_target_reached():
+                if self.is_moving():
                     for anwing in self.awnings:
                         anwing.set_position(0)
                 else:
+                    # stop
                     for anwing in self.awnings:
                         current_pos = anwing.get_position()
                         anwing.set_position(current_pos)

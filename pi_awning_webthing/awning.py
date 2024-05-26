@@ -27,6 +27,10 @@ class Awning(ABC):
     def set_position(self, new_position: int):
         pass
 
+    @abstractmethod
+    def is_moving(self) -> bool:
+        pass
+
     def add_listener(self, listener):
         self.__listeners.add(listener)
 
@@ -78,6 +82,9 @@ class Movement:
     def get_pause_sec(self):
         return 0.5
 
+    def is_moving(self) -> bool:
+        return False
+
     def get_current_pos(self) -> int:
         if self.is_target_reached():
             return self.get_target_pos()
@@ -128,6 +135,9 @@ class Idling(Movement):
         self.motor.stop()
         self.awning.on_updated()
 
+    def is_moving(self) -> bool:
+        return False
+
     def get_pause_sec(self):
         pause_sec = int(self.SLOT_TOLERANCE * self.sec_per_slot * 1.4)
         if pause_sec < 3:
@@ -145,6 +155,9 @@ class Forward(Movement):
         self.motor.forward()
         self.awning.on_updated()
 
+    def is_moving(self) -> bool:
+        return True
+
 
 class Backward(Movement):
 
@@ -152,6 +165,10 @@ class Backward(Movement):
         Movement.__init__(self, motor, start_pos, start_pos - new_position, sec_per_slot, False, awning)
         self.motor.backward()
         self.awning.on_updated()
+
+    def is_moving(self) -> bool:
+        return False
+
 
 
 class PiAwning(Awning):
@@ -208,6 +225,9 @@ class PiAwning(Awning):
 
     def is_target_reached(self) -> bool:
         return self.__get_current_position() == self.get_position()
+
+    def is_moving(self) -> bool:
+        return self.movement.is_moving()
 
     def get_position(self) -> int:
         return self.movement.get_target_pos()
