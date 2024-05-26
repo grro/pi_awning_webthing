@@ -31,8 +31,9 @@ class Awning(ABC):
     def is_moving(self) -> bool:
         pass
 
+    @abstractmethod
     def stop(self):
-        self.set_position(self.get_position())
+        pass
 
     def add_listener(self, listener):
         self.__listeners.add(listener)
@@ -219,15 +220,18 @@ class PiAwning(Awning):
                 break
             else:
                 time.sleep(5)
-        if self.__get_current_position() != saved_target_pos:
+        if self.get_current_position() != saved_target_pos:
             logging.info("move to previous target position " + str(saved_target_pos))
             self.set_position(saved_target_pos)
 
-    def __get_current_position(self) -> int:
+    def stop(self):
+        self.set_position(self.get_current_position())
+
+    def get_current_position(self) -> int:
         return self.movement.get_current_pos()
 
     def is_target_reached(self) -> bool:
-        return self.__get_current_position() == self.get_position()
+        return self.get_current_position() == self.get_position()
 
     def is_moving(self) -> bool:
         return self.movement.is_moving()
