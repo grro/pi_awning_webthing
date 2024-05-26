@@ -1,5 +1,6 @@
 import logging
 import RPi.GPIO as GPIO
+from datetime import datetime, timedelta
 from typing import List
 from pi_awning_webthing.awning import Awning
 
@@ -15,6 +16,7 @@ class Switch:
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
         self.state = self.STOP
+        self.last_time_direction_changed = datetime.now()
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
@@ -33,22 +35,31 @@ class Switch:
     def on_switch_updated(self, pin: int):
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1
+
         new_state = (is_forward, is_backward)
         try:
-            if self.state != new_state:
-                logging.info("switch new state     " + str(new_state) + " (old " + str(self.state) + ")")
-                if new_state == self.MOVE_FORWARD:
-                    for anwing in self.awnings:
-                        anwing.set_position(100)
-                elif new_state == self.MOVE_BACKWARD:
-                    for anwing in self.awnings:
-                        anwing.set_position(0)
-                elif new_state == self.STOP:
-                    for anwing in self.awnings:
-                        current_pos = anwing.get_position()
-                        anwing.set_position(current_pos)
-                else:
-                    pass
+            if new_state == self.MOVE_FORWARD:
+                if datetime.now() > self.last_time_direction_changed + timedelta(seconds=2):
+                    self.last_time_direction_changed = datetime.now()
+                    if self.state == self.MOVE_FORWARD:
+                        for anwing in self.awnings:
+                            current_pos = anwing.get_position()
+                            anwing.set_position(current_pos)
+                    else:
+                        self.last_time_direction_changed = datetime.now()
+                        for anwing in self.awnings:
+                            anwing.set_position(100)
+            elif new_state == self.MOVE_BACKWARD:
+                if datetime.now() > self.last_time_direction_changed + timedelta(seconds=2):
+                    self.last_time_direction_chnaged = datetime.now()
+                    if self.state == self.MOVE_FORWARD:
+                        for anwing in self.awnings:
+                            current_pos = anwing.get_position()
+                            anwing.set_position(current_pos)
+                    else:
+                        for anwing in self.awnings:
+                            anwing.set_position(0)
+
         except Exception as e:
             logging.error(e)
         finally:
