@@ -31,7 +31,7 @@ class Switch:
         new_state = (is_forward, is_backward)
         logging.info("\n\n\nnew state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
 
-        if datetime.now() > (self.last_time_pressed + timedelta(seconds=1)):
+        if datetime.now() > (self.last_time_pressed + timedelta(seconds=0.5)):
             self.last_time_pressed = datetime.now()
             try:
                 if new_state == self.MOVE_FORWARD:
@@ -50,3 +50,5 @@ class Switch:
                         self.awnings.set_position(0)
             except Exception as e:
                 logging.error(e)
+        else:
+            logging.info("double click")
