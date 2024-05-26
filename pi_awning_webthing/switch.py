@@ -31,24 +31,24 @@ class Switch:
         new_state = (is_forward, is_backward)
         logging.info("\n\n\nnew state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
 
-        #if datetime.now() > self.last_pressed + timedelta(milliseconds=300):
-        #    self.last_pressed = datetime.now()
-        try:
-            if new_state == self.MOVE_FORWARD:
-                if self.awnings.is_moving():
-                    logging.info("Forward and motion -> stop")
-                    self.awnings.stop()
-                else:
-                    logging.info("Forward set pos 0")
-                    self.awnings.set_position(100)
-            elif new_state == self.MOVE_BACKWARD:
-                if self.awnings.is_moving():
-                    logging.info("Bckward and motion -> stop")
-                    self.awnings.stop()
-                else:
-                    logging.info("Bckward set pos 0")
-                    self.awnings.set_position(0)
-        except Exception as e:
-            logging.error(e)
-        #else:
-        #    logging.info("double click")
+        if datetime.now() > self.last_pressed + timedelta(milliseconds=200):
+            self.last_pressed = datetime.now()
+            try:
+                if new_state == self.MOVE_FORWARD:
+                    if self.awnings.is_moving():
+                        logging.info("Forward and motion -> stop")
+                        self.awnings.stop()
+                    else:
+                        logging.info("Forward set pos 0")
+                        self.awnings.set_position(100)
+                elif new_state == self.MOVE_BACKWARD:
+                    if self.awnings.is_moving():
+                        logging.info("Bckward and motion -> stop")
+                        self.awnings.stop()
+                    else:
+                        logging.info("Bckward set pos 0")
+                        self.awnings.set_position(0)
+            except Exception as e:
+                logging.error(e)
+        else:
+            logging.info("double click")
