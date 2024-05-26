@@ -1,7 +1,6 @@
 import logging
 import RPi.GPIO as GPIO
-from time import time
-from typing import List
+from datetime import datetime, timedelta
 from pi_awning_webthing.awning import Awnings
 
 
@@ -15,7 +14,7 @@ class Switch:
         self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
-        self.last_time_pressed_sec = time()
+        self.last_pressed = datetime.now()
         self.state = self.IDLE
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
@@ -32,8 +31,8 @@ class Switch:
         new_state = (is_forward, is_backward)
         logging.info("\n\n\nnew state Forward=" + str(new_state[0]) + "; Backward=" + str(new_state[1]) + " is_moving=" + str(self.awnings.is_moving()))
 
-        if time() > (self.last_time_pressed_sec + 0.3):
-            self.last_time_pressed_sec = time()
+        if datetime.now() > self.last_pressed + timedelta(milliseconds=300):
+            self.last_pressed = datetime.now()
             try:
                 if new_state == self.MOVE_FORWARD:
                     if self.awnings.is_moving():
