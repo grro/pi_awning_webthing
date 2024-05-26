@@ -16,7 +16,6 @@ class Switch:
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
         self.state = self.STOP
-        self.last_time_direction_changed = datetime.now()
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
@@ -39,26 +38,26 @@ class Switch:
         new_state = (is_forward, is_backward)
         try:
             if new_state == self.MOVE_FORWARD:
-                if datetime.now() > self.last_time_direction_changed + timedelta(seconds=2):
+                # repeated
+                if self.state == self.MOVE_FORWARD:
+                    for anwing in self.awnings:
+                        current_pos = anwing.get_position()
+                        anwing.set_position(current_pos)
+                # fresh
+                else:
                     self.last_time_direction_changed = datetime.now()
-                    if self.state == self.MOVE_FORWARD:
-                        for anwing in self.awnings:
-                            current_pos = anwing.get_position()
-                            anwing.set_position(current_pos)
-                    else:
-                        self.last_time_direction_changed = datetime.now()
-                        for anwing in self.awnings:
-                            anwing.set_position(100)
+                    for anwing in self.awnings:
+                        anwing.set_position(100)
             elif new_state == self.MOVE_BACKWARD:
-                if datetime.now() > self.last_time_direction_changed + timedelta(seconds=2):
-                    self.last_time_direction_chnaged = datetime.now()
-                    if self.state == self.MOVE_FORWARD:
-                        for anwing in self.awnings:
-                            current_pos = anwing.get_position()
-                            anwing.set_position(current_pos)
-                    else:
-                        for anwing in self.awnings:
-                            anwing.set_position(0)
+                # repeated
+                if self.state == self.MOVE_BACKWARD:
+                    for anwing in self.awnings:
+                        current_pos = anwing.get_position()
+                        anwing.set_position(current_pos)
+                # fresh
+                else:
+                    for anwing in self.awnings:
+                        anwing.set_position(0)
 
         except Exception as e:
             logging.error(e)
