@@ -167,7 +167,7 @@ class Backward(Movement):
         self.awning.on_updated()
 
     def is_moving(self) -> bool:
-        return False
+        return True
 
 
 
