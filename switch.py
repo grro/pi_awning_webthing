@@ -1,7 +1,7 @@
 import logging
 import RPi.GPIO as GPIO
 from datetime import datetime, timedelta
-from pi_awning_webthing.awning import Awnings
+from awning import Awnings
 
 
 class Switch:

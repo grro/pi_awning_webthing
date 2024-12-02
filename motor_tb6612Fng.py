@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from pi_awning_webthing.awning import Motor
+from awning import Motor
 from dataclasses import dataclass
 from typing import List
 import logging

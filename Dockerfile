@@ -1,23 +1,16 @@
-FROM python:3.9.1-alpine
+FROM python:3
 
-ENV port 9500
-ENV switch_pin_forward -1
-ENV switch_pin_backward -1
+ENV port 8080
 
+RUN cd /etc
+RUN mkdir app
+WORKDIR /etc/app
+ADD *.py /etc/app/
+ADD requirements.txt /etc/app/.
+RUN pip install -r requirements.txt
 
-RUN apk add build-base
+CMD python /etc/app/awning_webthing.py.py $port $filename $switch_pin_forward -$switch_pin_backward
 
-ADD setup.py /tmp/.
-ADD README.md /tmp/.
-ADD pi_awning_webthing /tmp/pi_awning_webthing/.
-
-RUN ls /tmp/
-WORKDIR /tmp/
-RUN  python /tmp/setup.py install
-WORKDIR /
-RUN rm -r /tmp/
-
-CMD awning --command listen --port $port --filename $filename --switch_pin_forward $switch_pin_forward --switch_pin_backward $switch_pin_backward
 
 
 
