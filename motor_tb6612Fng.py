@@ -31,7 +31,6 @@ def load_tb6612fng(filename: str) -> List[Motor]:
                         logging.info("config entry found: " + name + " with pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration))
                     except Exception as e:
                         logging.error("invalid syntax in line " + line + "  ignoring it" + str(e))
-        logging.info(str(len(motors)) + " entries found")
     return motors
 
 
