@@ -14,6 +14,7 @@ class Config:
 
 
 def load_tb6612fng(filename: str) -> List[Motor]:
+    logging.info("loading config " + filename)
     motors = list()
     if "tb6612fng" in filename.lower() and path.exists(filename):
         with open(filename, "r") as file:
@@ -30,6 +31,7 @@ def load_tb6612fng(filename: str) -> List[Motor]:
                         logging.info("config entry found: " + name + " with pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration))
                     except Exception as e:
                         logging.error("invalid syntax in line " + line + "  ignoring it" + str(e))
+        logging.info(str(len(motors)) + " entries found")
     return motors
 
 
