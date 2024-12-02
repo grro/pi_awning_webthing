@@ -106,7 +106,7 @@ if __name__ == '__main__':
         logging.basicConfig(format='%(asctime)s %(name)-20s: %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
         logging.getLogger('tornado.access').setLevel(logging.ERROR)
         logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
-        run_server(int(sys.argv[1]), sys.argv[2], int(sys.argv[2]), int(sys.argv[4]))
+        run_server(int(sys.argv[1]), sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
     except Exception as e:
         logging.error(str(e))
         raise e
