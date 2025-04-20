@@ -43,9 +43,11 @@ class TB6612FNGMotor(Motor):
         GPIO.setmode(GPIO.BCM)
         self.pin_forward = pin_forward
         self.pin_forward_is_on = False
+        logging.info(self.__name + " register pin " + str(pin_forward) + " as forward")
         GPIO.setup(pin_forward, GPIO.OUT, initial=0)
         self.pin_backward = pin_backward
         self.pin_backward_is_on = False
+        logging.info(self.__name + " register pin " + str(pin_backward) + " as backward")
         GPIO.setup(pin_backward, GPIO.OUT, initial=0)
 
     @property

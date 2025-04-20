@@ -17,9 +17,11 @@ class Switch:
         self.last_pressed = datetime.now()
         self.state = self.IDLE
         GPIO.setmode(GPIO.BCM)
+        logging.info("Switch register pin " + str(self.pin_forward) + " as forward")
         GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
         GPIO.add_event_callback(self.pin_forward, self.on_switch_updated)
+        logging.info("Switch register pin " + str(self.pin_backward) + " as backward")
         GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
         GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
