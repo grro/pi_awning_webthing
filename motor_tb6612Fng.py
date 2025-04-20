@@ -51,6 +51,10 @@ class TB6612FNGMotor(Motor):
         logging.info(self.__name + " register pin " + str(pin_backward) + " as backward")
         GPIO.setup(pin_backward, GPIO.OUT, initial=0)
 
+    def terminate(self):
+        GPIO.cleanup(self.pin_forward)
+        GPIO.cleanup(self.pin_backward)
+
     @property
     def name(self) -> str:
         return self.__name

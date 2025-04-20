@@ -27,6 +27,12 @@ class Switch:
         GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
         logging.info("Switch bound to pin_forward=" + str(self.pin_forward) + " and pin_backward=" + str(self.pin_backward))
 
+
+    def terminate(self):
+        GPIO.cleanup(self.pin_forward)
+        GPIO.cleanup(self.pin_backward)
+
+
     def on_switch_updated(self, pin: int):
         is_forward = GPIO.input(self.pin_forward) >= 1
         is_backward = GPIO.input(self.pin_backward) >= 1

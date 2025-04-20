@@ -50,6 +50,10 @@ class Awning(ABC):
 class Motor(ABC):
 
     @abstractmethod
+    def terminate(self):
+        pass
+
+    @abstractmethod
     def stop(self):
         pass
 
@@ -192,6 +196,9 @@ class PiAwning(Awning):
         self.set_position(0)
         Thread(name=self.name + "_move", target=self.__process_move, daemon=False).start()
         Thread(target=self.__periodic_calibrate, daemon=True).start()
+
+    def terminate(self):
+        self.motor.terminate()
 
     def on_updated(self):
         self._notify_listeners()

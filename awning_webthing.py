@@ -86,14 +86,19 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
         awning_webthings = [AwningWebThing(anwing) for anwing in awnings]
         server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
 
+        switch = None
         if switch_pin_forward > 0 and switch_pin_backward > 0:
-            Switch(switch_pin_forward, switch_pin_backward, awnings=anwing_all)
+            switch = Switch(switch_pin_forward, switch_pin_backward, awnings=anwing_all)
 
         try:
             logging.info('starting the server')
             server.start()
         except KeyboardInterrupt:
             logging.info('stopping the server')
+            if switch is not None:
+                switch.terminate()
+            for awning in awnings:
+                awning.terminate()
             server.stop()
             logging.info('done')
             return
