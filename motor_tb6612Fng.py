@@ -27,11 +27,12 @@ def load_tb6612fng(filename: str) -> List[Motor]:
                         pin_forward = int(parts[1].strip())
                         pin_backward = int(parts[2].strip())
                         step_duration = float(parts[3].strip())
+                        logging.info("config entry found: " + name + " with pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration) + ". Activate motor control")
                         motors.append(TB6612FNGMotor(name, pin_forward, pin_backward, step_duration))
-                        logging.info("config entry found: " + name + " with pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration))
                     except Exception as e:
                         logging.error("invalid syntax in line " + line + "  ignoring it" + str(e))
     return motors
+
 
 
 
