@@ -29,7 +29,7 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
                 self._send_json(200, {'position': awning.position})
         else:
             html = "<h1>available awnings</h1><ul>"
-            for s in self.server.awning :
+            for s in self.server.awnings :
                 html += f"<li><a href='/{s.name}'>{s.name}</a></li>"
             html += "</ul>"
             self._send_html(200, html)

@@ -25,7 +25,7 @@ class AwningMCPServer(MCPServer):
             for awning  in self.awnings:
                 if awning.name == awningname:
                     return awning.get_position()
-            raise ValueError(f"roller shutter '{name}' not found")
+            raise ValueError(f"awning '{awningname}' not found")
 
 
         @self.mcp.tool()
