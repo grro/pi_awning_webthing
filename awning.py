@@ -12,8 +12,12 @@ from threading import Thread, Lock
 class Awning(ABC):
 
     def __init__(self, name: str):
-        self.name = name
+        self.__name = name
         self.__listeners = set()
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     @abstractmethod
     def is_target_reached(self) -> bool:

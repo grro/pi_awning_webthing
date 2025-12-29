@@ -1,2 +1,4 @@
 webthing>=0.15.0
 rpi-lgpio>=0.6
+redzoo>=0.3.7
+mcp>=0.18.0

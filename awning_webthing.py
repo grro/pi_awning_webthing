@@ -6,6 +6,8 @@ from awning import Awning, PiAwning, Awnings
 from switch import Switch
 from motor_tb6612Fng import load_tb6612fng
 from time import sleep
+from awning_web import AwningWebServer
+from awning_mcp import AwningMCPServer
 
 
 class AwningWebThing(Thing):
@@ -84,6 +86,9 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
         anwing_all= Awnings("all", awnings)
         awnings = [anwing_all] + awnings
         awning_webthings = [AwningWebThing(anwing) for anwing in awnings]
+
+        web_server = AwningWebServer(awnings, port=port+1)
+        mcp_server = AwningMCPServer("awning", port+2, awnings)
         server = WebThingServer(MultipleThings(awning_webthings, 'Awnings'), port=port, disable_host_validation=True)
 
         switch = None
@@ -92,6 +97,8 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
 
         try:
             logging.info('starting the server')
+            mcp_server.start()#
+            web_server.start()
             server.start()
         except KeyboardInterrupt:
             logging.info('stopping the server')
@@ -99,6 +106,8 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
                 switch.terminate()
             for awning in awnings:
                 awning.terminate()
+            mcp_server.stop()
+            web_server.stop()
             server.stop()
             logging.info('done')
             return
