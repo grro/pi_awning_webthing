@@ -26,7 +26,7 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
                 except ValueError:
                     self._send_json(400, {"error": "position must be a number"})
             else:
-                self._send_json(200, {'position': awning.position})
+                self._send_json(200, {'position': awning.get_position()})
         else:
             html = "<h1>available awnings</h1><ul>"
             for s in self.server.awnings :
