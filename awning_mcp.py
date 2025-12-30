@@ -12,7 +12,7 @@ class AwningMCPServer(MCPServer):
 
         @self.mcp.resource("awning://list/names")
         def list_awning_names() -> str:
-            """Returns a comma-separated list of all available awning names."""
+            """Returns a comma-separated list of all available awning names. The awning with the extension all is the group of all awnings. """
             return ", ".join([awning.name for awning in self.awnings])
 
 
