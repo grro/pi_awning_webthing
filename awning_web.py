@@ -23,8 +23,9 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
                 try:
                     new_pos = int(query_params['position'][0])
                     awning.set_position(new_pos)
-                except ValueError:
-                    self._send_json(400, {"error": "position must be a number"})
+                    self._send_json(200, {'target_position': awning.get_position()})
+                except Exception as e:
+                    self._send_json(400, {"error": str(e)})
             else:
                 self._send_json(200, {'position': awning.get_position()})
         else:
