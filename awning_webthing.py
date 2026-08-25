@@ -78,6 +78,7 @@ class AwningWebThing(Thing):
 
 
 def run_server(port: int, filename: str, chip: str, switch_pin_forward: int, switch_pin_backward: int):
+    logging.info('chip ' + chip)
     logging.info("switch_pin_forward " + str(switch_pin_forward))
     logging.info("switch_pin_backward " + str(switch_pin_backward))
 
