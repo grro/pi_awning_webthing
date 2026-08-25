@@ -16,12 +16,14 @@ class Switch:
         self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
+        # gpiod expects the full device path (e.g. /dev/gpiochip0), not just the chip name
+        chip_path = chip if chip.startswith("/") else "/dev/" + chip
         self.last_pressed = datetime.now()
         self.state = self.IDLE
         logging.info("Switch register pin " + str(self.pin_forward) + " as forward")
         logging.info("Switch register pin " + str(self.pin_backward) + " as backward")
         self.__request = gpiod.request_lines(
-            chip,
+            chip_path,
             consumer="awning-switch",
             config={
                 (pin_forward, pin_backward): gpiod.LineSettings(

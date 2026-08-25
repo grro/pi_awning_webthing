@@ -44,7 +44,8 @@ class TB6612FNGMotor(Motor):
     def __init__(self, name: str, chip: str, pin_forward: int, pin_backward: int, sec_per_step: float):
         self.__name = name
         self.__sec_per_step = sec_per_step
-        self.chip = chip
+        # gpiod expects the full device path (e.g. /dev/gpiochip0), not just the chip name
+        self.chip = chip if chip.startswith("/") else "/dev/" + chip
         self.pin_forward = pin_forward
         self.pin_forward_is_on = False
         self.pin_backward = pin_backward
