@@ -107,3 +107,32 @@ class AwningMCPServer:
             status_list = [f"{a.name}: {a.get_position()}%" for a in self.awnings]
             return "Current Status: " + " | ".join(status_list)
 
+
+    async def __run(self) -> None:
+        logging.info(f"MCP Server '{self.name}' running on http://{self.host}:{self.port}/sse")
+        await self.mcp.run_async(
+            transport="sse",
+            host=self.host,
+            port=self.port,
+            uvicorn_config={"access_log": False, "log_config": None}
+        )
+
+
+    def start(self):
+        self.mdns.register_mdns(self.name, self.port)
+
+        def _run_loop():
+            asyncio.set_event_loop(self.loop)
+            try:
+                self.loop.run_until_complete(self.__run())
+            finally:
+                self.loop.close()
+
+        thread = threading.Thread(target=_run_loop, daemon=True)
+        thread.start()
+
+
+    def stop(self):
+        self.mdns.unregister_mdns(self.name)
+        self.loop.stop()
+        logging.info("MCP Server stopped")

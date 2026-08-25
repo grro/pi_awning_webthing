@@ -124,6 +124,16 @@ if __name__ == '__main__':
         logging.basicConfig(format='%(asctime)s %(name)-20s: %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
         logging.getLogger('tornado.access').setLevel(logging.ERROR)
         logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
+        logging.getLogger("httpx").setLevel(logging.WARNING)
+        logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
+        logging.getLogger('starlette.middleware.base').setLevel(logging.WARNING)
+        logging.getLogger('fastmcp').setLevel(logging.WARNING)
+        logging.getLogger('mcp').setLevel(logging.WARNING)
+        logging.getLogger('mcp.server').setLevel(logging.WARNING)
+        logging.getLogger('mcp.server.lowlevel.server').setLevel(logging.WARNING)
+        logging.getLogger('uvicorn.access').disabled = True
+        logging.getLogger('uvicorn.error').setLevel(logging.WARNING)
+
         run_server(int(sys.argv[1]), sys.argv[2], sys.argv[3], int(sys.argv[4]), int(sys.argv[5]))
     except Exception as e:
         logging.error(str(e))
