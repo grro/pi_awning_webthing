@@ -21,4 +21,4 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.t
 
 COPY *.py ./
 
-CMD ["sh", "-c", "python awning_webthing.py $port $filename $switch_pin_forward $switch_pin_backward"]
+CMD ["sh", "-c", "python awning_webthing.py $port $filename $chip $switch_pin_forward $switch_pin_backward"]

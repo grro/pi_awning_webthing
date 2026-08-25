@@ -6,19 +6,13 @@ from gpiod.line import Direction, Edge, Bias, Value
 from datetime import datetime, timedelta
 from awning import Awnings
 
-# gpio character device the switch is wired to. On most Raspberry Pi models the
-# 40-pin header is exposed as /dev/gpiochip0. It can be overridden via the
-# GPIOCHIP environment variable (e.g. /dev/gpiochip4 on older Pi 5 kernels).
-GPIOCHIP = os.environ.get("GPIOCHIP", "/dev/gpiochip0")
-
-
 class Switch:
     STOP = (False, False)
     MOVE_FORWARD = (True, False)
     MOVE_BACKWARD = (False, True)
     IDLE = (True, True)
 
-    def __init__(self, pin_forward: int, pin_backward: int, awnings: Awnings):
+    def __init__(self, chip: str, pin_forward: int, pin_backward: int, awnings: Awnings):
         self.awnings = awnings
         self.pin_forward = pin_forward
         self.pin_backward = pin_backward
@@ -27,7 +21,7 @@ class Switch:
         logging.info("Switch register pin " + str(self.pin_forward) + " as forward")
         logging.info("Switch register pin " + str(self.pin_backward) + " as backward")
         self.__request = gpiod.request_lines(
-            GPIOCHIP,
+            chip,
             consumer="awning-switch",
             config={
                 (pin_forward, pin_backward): gpiod.LineSettings(

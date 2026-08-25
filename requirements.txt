@@ -1,4 +1,5 @@
 webthing>=0.15.0
 gpiod>=2.1
 redzoo>=0.3.7
-mcp-baselib>=1.0.3
+fastmcp==3.3.1
+zeroconf>=0.150.0

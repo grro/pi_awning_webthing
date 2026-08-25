@@ -1,15 +1,83 @@
-from typing import List
-from mcplib.server import MCPServer
+import asyncio
+import logging
+import threading
+from typing import Protocol, cast, List, Dict
+from fastmcp import FastMCP
+from pydantic import AnyUrl, TypeAdapter
+from datetime import datetime, timezone
+from zeroconf import IPVersion, ServiceInfo, Zeroconf
+import socket
 from awning import Awning
 
 
 
-class AwningMCPServer(MCPServer):
 
-    def __init__(self, port: int, awnings: List[Awning]):
-        super().__init__("sunblind", port)
+
+class MDNS:
+
+    def __init__(self):
+        self.registered: Dict[str, ServiceInfo] = dict()
+        self.zc = Zeroconf(ip_version=IPVersion.V4Only)
+        self.service_type = "_mcp._tcp.local."
+        self.hostname = socket.gethostname()
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(("8.8.8.8", 80))
+            self.local_ip = s.getsockname()[0]
+        finally:
+            s.close()
+
+
+    def register_mdns(self, name: str, port: int):
+        try:
+            service_name = f"{name}.{self.service_type}"
+            service_info = ServiceInfo(
+                type_= self.service_type,
+                name=service_name,
+                addresses=[socket.inet_aton(self.local_ip)],
+                port=port,
+                properties={
+                    "version": "1.0",
+                    "path": "/sse",
+                    "server_type": "fastmcp"
+                },
+                server=f"{self.hostname}.local.",
+            )
+
+            logging.info(f"mDNS: Registering {service_name} at {self.local_ip}:{port}")
+            self.zc.register_service(service_info)
+            self.registered[name] = service_info
+        except Exception as e:
+            logging.error(f"mDNS Registration failed: {e}")
+
+    def unregister_mdns(self, name: str):
+        service_info = self.registered.get(name)
+        if service_info is not None:
+            logging.info("mDNS: Unregistering service...")
+            self.zc.unregister_service(service_info)
+            self.zc.close()
+
+
+
+class ResourceUpdateSession(Protocol):
+    async def send_resource_updated(self, uri: AnyUrl) -> None:
+        ...
+
+
+
+class AwningMCPServer:
+
+    def __init__(self, port: int, awnings: List[Awning], host: str = "0.0.0.0"):
+        self.name = "Awning"
+        self.host = host
+        self.port = port
+
+        self.mdns = MDNS()
+        self.mcp = FastMCP(self.name)
+        self.active_sessions: set[ResourceUpdateSession] = set()
+        self.low_level_server = self.mcp._mcp_server
         self.awnings = awnings
-
+        self.loop = asyncio.new_event_loop()
 
         @self.mcp.tool()
         def set_position(name: str, position: int) -> str:

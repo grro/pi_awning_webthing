@@ -16,7 +16,7 @@ class Config:
     gpio_backward: int
 
 
-def load_tb6612fng(filename: str) -> List[Motor]:
+def load_tb6612fng(filename: str, chip: str) -> List[Motor]:
     logging.info("loading config " + filename)
     motors = list()
     if "tb6612fng" in filename.lower() and path.exists(filename):
@@ -27,10 +27,9 @@ def load_tb6612fng(filename: str) -> List[Motor]:
                     try:
                         parts = line.split(",")
                         name = parts[0].strip()
-                        chip = parts[1].strip()
-                        pin_forward = int(parts[2].strip())
-                        pin_backward = int(parts[3].strip())
-                        step_duration = float(parts[4].strip())
+                        pin_forward = int(parts[1].strip())
+                        pin_backward = int(parts[2].strip())
+                        step_duration = float(parts[3].strip())
                         logging.info("config entry found: " + name + " with chip=" + chip + ", pin_forward=" + str(pin_forward) + ", pin_backward=" + str(pin_backward) + ", step_duration=" + str(step_duration) + ". Activate motor control")
                         motors.append(TB6612FNGMotor(name, chip, pin_forward, pin_backward, step_duration))
                     except Exception as e:

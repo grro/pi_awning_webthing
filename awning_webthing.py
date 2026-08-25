@@ -77,12 +77,12 @@ class AwningWebThing(Thing):
 
 
 
-def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_backward: int):
+def run_server(port: int, filename: str, chip: str, switch_pin_forward: int, switch_pin_backward: int):
     logging.info("switch_pin_forward " + str(switch_pin_forward))
     logging.info("switch_pin_backward " + str(switch_pin_backward))
 
     while True:
-        awnings = [PiAwning(motor) for motor in load_tb6612fng(filename)]
+        awnings = [PiAwning(motor) for motor in load_tb6612fng(filename, chip)]
         anwing_all= Awnings("all", awnings)
         awnings = [anwing_all] + awnings
         awning_webthings = [AwningWebThing(anwing) for anwing in awnings]
@@ -94,7 +94,7 @@ def run_server(port: int, filename: str, switch_pin_forward: int, switch_pin_bac
 
         switch = None
         if switch_pin_forward > 0 and switch_pin_backward > 0:
-            switch = Switch(switch_pin_forward, switch_pin_backward, awnings=anwing_all)
+            switch = Switch(chip, switch_pin_forward, switch_pin_backward, awnings=anwing_all)
 
         try:
             logging.info('starting the server')
@@ -123,7 +123,7 @@ if __name__ == '__main__':
         logging.basicConfig(format='%(asctime)s %(name)-20s: %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
         logging.getLogger('tornado.access').setLevel(logging.ERROR)
         logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
-        run_server(int(sys.argv[1]), sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
+        run_server(int(sys.argv[1]), sys.argv[2], sys.argv[3], int(sys.argv[4]), int(sys.argv[5]))
     except Exception as e:
         logging.error(str(e))
         raise e
