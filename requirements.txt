@@ -1,4 +1,4 @@
 webthing>=0.15.0
-rpi-lgpio>=0.6
+gpiod>=2.1
 redzoo>=0.3.7
 mcp-baselib>=1.0.3

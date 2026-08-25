@@ -1,7 +1,15 @@
 import logging
-import RPi.GPIO as GPIO
+import os
+import threading
+import gpiod
+from gpiod.line import Direction, Edge, Bias, Value
 from datetime import datetime, timedelta
 from awning import Awnings
+
+# gpio character device the switch is wired to. On most Raspberry Pi models the
+# 40-pin header is exposed as /dev/gpiochip0. It can be overridden via the
+# GPIOCHIP environment variable (e.g. /dev/gpiochip4 on older Pi 5 kernels).
+GPIOCHIP = os.environ.get("GPIOCHIP", "/dev/gpiochip0")
 
 
 class Switch:
@@ -16,26 +24,43 @@ class Switch:
         self.pin_backward = pin_backward
         self.last_pressed = datetime.now()
         self.state = self.IDLE
-        GPIO.setmode(GPIO.BCM)
         logging.info("Switch register pin " + str(self.pin_forward) + " as forward")
-        GPIO.setup(self.pin_forward, GPIO.IN, GPIO.PUD_DOWN)
-        GPIO.add_event_detect(self.pin_forward, GPIO.BOTH)
-        GPIO.add_event_callback(self.pin_forward, self.on_switch_updated)
         logging.info("Switch register pin " + str(self.pin_backward) + " as backward")
-        GPIO.setup(self.pin_backward, GPIO.IN, GPIO.PUD_DOWN)
-        GPIO.add_event_detect(self.pin_backward, GPIO.BOTH)
-        GPIO.add_event_callback(self.pin_backward, self.on_switch_updated)
+        self.__request = gpiod.request_lines(
+            GPIOCHIP,
+            consumer="awning-switch",
+            config={
+                (pin_forward, pin_backward): gpiod.LineSettings(
+                    direction=Direction.INPUT,
+                    edge_detection=Edge.BOTH,
+                    bias=Bias.PULL_DOWN,
+                )
+            },
+        )
+        self.__running = True
+        self.__thread = threading.Thread(target=self.__monitor, name="switch-monitor", daemon=True)
+        self.__thread.start()
         logging.info("Switch bound to pin_forward=" + str(self.pin_forward) + " and pin_backward=" + str(self.pin_backward))
 
 
     def terminate(self):
-        GPIO.cleanup(self.pin_forward)
-        GPIO.cleanup(self.pin_backward)
+        self.__running = False
+        self.__request.release()
 
 
-    def on_switch_updated(self, pin: int):
-        is_forward = GPIO.input(self.pin_forward) >= 1
-        is_backward = GPIO.input(self.pin_backward) >= 1
+    def __monitor(self):
+        while self.__running:
+            try:
+                if self.__request.wait_edge_events(timedelta(seconds=1)):
+                    self.__request.read_edge_events()
+                    self.on_switch_updated()
+            except Exception as e:
+                logging.error(e)
+
+
+    def on_switch_updated(self):
+        is_forward = self.__request.get_value(self.pin_forward) == Value.ACTIVE
+        is_backward = self.__request.get_value(self.pin_backward) == Value.ACTIVE
         new_state = (is_forward, is_backward)
 
         if datetime.now() > self.last_pressed + timedelta(milliseconds=200):

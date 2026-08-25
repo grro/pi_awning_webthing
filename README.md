@@ -5,11 +5,11 @@ Currently supported are [TB6612FNG powered](https://www.pololu.com/product/713) 
 [DGO-3512ADA](https://www.ebay.co.uk/itm/Gear-Motor-Direct-Current-6-12V-Electric-With-Removable-Crank-DGO-3512ADA-/183375290396).
 The specific motor configuration(s) are defined using a configuration file as shown below.
 ```
-# name, gpio_forward, gpio_backward, step_duration_in_sec
-lane1, 2, 3, 0.5
-lane2, 19, 26, 0.5
-lane3, 5, 6, 0.5
-lane4, 10, 9, 0.5
+# name, chip, gpio_forward, gpio_backward, step_duration_in_sec
+lane1, gpiochip0, 2, 3, 0.5
+lane2, gpiochip0, 19, 26, 0.5
+lane3, gpiochip0, 5, 6, 0.5
+lane4, gpiochip0, 10, 9, 0.5
 ```
 For motors with TB6612FNG, the file name must contain the term *tb6612fng*, e.g. tb6612fng_motors.config. Concerning the
 hardware setup and wiring please read [Example Hardware Setup](doc/dgo-3512ada.md).
