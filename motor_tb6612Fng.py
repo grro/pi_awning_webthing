@@ -20,6 +20,7 @@ def load_tb6612fng(filename: str, chip: str) -> List[Motor]:
     logging.info("loading config " + filename)
     motors = list()
     if "tb6612fng" in filename.lower() and path.exists(filename):
+        logging.info("parsing config " + filename)
         with open(filename, "r") as file:
             for line in file.readlines():
                 line = line.strip()
